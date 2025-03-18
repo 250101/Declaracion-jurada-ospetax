@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaración Jurada de Salud - OSPETAX</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; font-size: 12px; }
+        h1 { font-size: 16px; text-align: center; margin: 5px 0; }
+        h2 { font-size: 14px; text-align: center; text-decoration: underline; }
+        h3 { font-size: 12px; text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 5px; font-size: 10px; min-width: 60px; }
+        th { background-color: #f2f2f2; }
+        input, textarea { 
+            width: 100%; 
+            border: none; 
+            border-bottom: 1px solid #000; /* Subrayado negro por defecto */
+            font-size: 10px; 
+            overflow-x: auto; 
+            white-space: nowrap; 
+            background: transparent; 
+            padding-bottom: 2px; 
+        }
+        input:focus, textarea:focus { 
+            outline: none; 
+            border-bottom: 2px solid #007bff; /* Subrayado azul al hacer foco */
+        }
+        .inline-label { display: inline-block; margin-right: 10px; }
+        .section { margin-bottom: 15px; }
+        canvas { border: 1px solid #000; margin-top: 10px; touch-action: none; }
+        .success { color: green; display: none; text-align: center; }
+        .small-text { font-size: 10px; }
+        .header { display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .logo { width: 80px; height: auto; margin-right: 20px; border: 1px solid #ddd; padding: 5px; background: #fff; }
+        .header-text { text-align: center; }
+        @media (max-width: 600px) {
+            table { display: block; overflow-x: auto; }
+            .header { flex-direction: column; align-items: center; }
+            .logo { margin-right: 0; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://racais.com.ar/img/obrasSociales/ospetax.jpg" alt="Logo OSPETAX" class="logo">
+        <div class="header-text">
+            <h1>OBRA SOCIAL DE PEONES DE TAXI DE LA CAPITAL FEDERAL</h1>
+            <p>RNOS 1-2370-1</p>
+            <p>Av. La Plata N° 1562/64</p>
+            <p>Teléfonos: 011-4920-7000/7099</p>
+            <p>CP: C1250AAS</p>
+            <p>Ciudad Autónoma de Buenos Aires</p>
+            <p>www.ospetax.org.ar</p>
+        </div>
+    </div>
+
+    <h2>DECLARACIÓN JURADA DE SALUD</h2>
+
+    <form id="healthForm" onsubmit="submitForm(event)">
+        <div class="section">
+            <label class="inline-label"><strong>APELLIDO Y NOMBRE DEL TITULAR:</strong> <input type="text" name="titular_nombre" inputmode="text" required></label>
+            <label class="inline-label"><strong>CUIT:</strong> <input type="text" name="titular_cuit" inputmode="numeric" required></label><br>
+            <label class="inline-label"><strong>OPCIÓN N°:</strong> <input type="number" name="opcion_numero"></label>
+            <label class="inline-label"><strong>FECHA NAC:</strong> <input type="date" name="titular_fecha_nac" required></label>
+            <label class="inline-label"><strong>EDAD:</strong> <input type="number" name="titular_edad" required></label>
+            <label class="inline-label"><strong>MAIL:</strong> <input type="email" name="titular_email" required></label>
+        </div>
+
+        <div class="section">
+            <h3>COMPLETAR TODOS LOS DATOS DEL GRUPO FAMILIAR QUE VAN A INGRESAR A LA COBERTURA DEL TITULAR</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>DETALLE</th>
+                        <th>TITULAR</th>
+                        <th>ESPOSA/O</th>
+                        <th>HIJO</th>
+                        <th>HIJO</th>
+                        <th>HIJO</th>
+                        <th>HIJO</th>
+                        <th>HIJO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>EDAD</td><td><input type="number" name="edad_titular"></td><td><input type="number" name="edad_esposa"></td><td><input type="number" name="edad_hijo1"></td><td><input type="number" name="edad_hijo2"></td><td><input type="number" name="edad_hijo3"></td><td><input type="number" name="edad_hijo4"></td><td><input type="number" name="edad_hijo5"></td></tr>
+                    <tr><td>PESO</td><td><input type="number" name="peso_titular"></td><td><input type="number" name="peso_esposa"></td><td><input type="number" name="peso_hijo1"></td><td><input type="number" name="peso_hijo2"></td><td><input type="number" name="peso_hijo3"></td><td><input type="number" name="peso_hijo4"></td><td><input type="number" name="peso_hijo5"></td></tr>
+                    <tr><td>ALTURA</td><td><input type="number" name="altura_titular"></td><td><input type="number" name="altura_esposa"></td><td><input type="number" name="altura_hijo1"></td><td><input type="number" name="altura_hijo2"></td><td><input type="number" name="altura_hijo3"></td><td><input type="number" name="altura_hijo4"></td><td><input type="number" name="altura_hijo5"></td></tr>
+                    <tr><td>FUMA / CTOS</td><td><input type="text" name="fuma_titular" inputmode="text"></td><td><input type="text" name="fuma_esposa" inputmode="text"></td><td><input type="text" name="fuma_hijo1" inputmode="text"></td><td><input type="text" name="fuma_hijo2" inputmode="text"></td><td><input type="text" name="fuma_hijo3" inputmode="text"></td><td><input type="text" name="fuma_hijo4" inputmode="text"></td><td><input type="text" name="fuma_hijo5" inputmode="text"></td></tr>
+                    <tr><td>CIRUGIAS REALIZADAS ANTERIORES - DETALLAR</td><td><input type="text" name="cirugias_ant_titular" inputmode="text"></td><td><input type="text" name="cirugias_ant_esposa" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo1" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo2" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo3" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo4" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo5" inputmode="text"></td></tr>
+                    <tr><td>CIRUGIAS PENDIENTES QUE TIENE QUE REALIZAR - DETALLAR</td><td><input type="text" name="cirugias_pen_titular" inputmode="text"></td><td><input type="text" name="cirugias_pen_esposa" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo1" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo2" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo3" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo4" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo5" inputmode="text"></td></tr>
+                    <tr><td>TRATAMIENTOS PENDIENTES A REALIZAR - DETALLAR</td><td><input type="text" name="trat_pen_titular" inputmode="text"></td><td><input type="text" name="trat_pen_esposa" inputmode="text"></td><td><input type="text" name="trat_pen_hijo1" inputmode="text"></td><td><input type="text" name="trat_pen_hijo2" inputmode="text"></td><td><input type="text" name="trat_pen_hijo3" inputmode="text"></td><td><input type="text" name="trat_pen_hijo4" inputmode="text"></td><td><input type="text" name="trat_pen_hijo5" inputmode="text"></td></tr>
+                    <tr><td>TIENE ALGUNA PROTESIS COLOCADAS - DETALLAR</td><td><input type="text" name="protesis_titular" inputmode="text"></td><td><input type="text" name="protesis_esposa" inputmode="text"></td><td><input type="text" name="protesis_hijo1" inputmode="text"></td><td><input type="text" name="protesis_hijo2" inputmode="text"></td><td><input type="text" name="protesis_hijo3" inputmode="text"></td><td><input type="text" name="protesis_hijo4" inputmode="text"></td><td><input type="text" name="protesis_hijo5" inputmode="text"></td></tr>
+                    <tr><td>ESTA O NECESITA TRATAMIENTO PSICOLÓGICO</td><td><input type="text" name="psico_titular" inputmode="text"></td><td><input type="text" name="psico_esposa" inputmode="text"></td><td><input type="text" name="psico_hijo1" inputmode="text"></td><td><input type="text" name="psico_hijo2" inputmode="text"></td><td><input type="text" name="psico_hijo3" inputmode="text"></td><td><input type="text" name="psico_hijo4" inputmode="text"></td><td><input type="text" name="psico_hijo5" inputmode="text"></td></tr>
+                    <tr><td>ESTA O NECESITA TRATAMIENTO NUTRICIONAL</td><td><input type="text" name="nutri_titular" inputmode="text"></td><td><input type="text" name="nutri_esposa" inputmode="text"></td><td><input type="text" name="nutri_hijo1" inputmode="text"></td><td><input type="text" name="nutri_hijo2" inputmode="text"></td><td><input type="text" name="nutri_hijo3" inputmode="text"></td><td><input type="text" name="nutri_hijo4" inputmode="text"></td><td><input type="text" name="nutri_hijo5" inputmode="text"></td></tr>
+                    <tr><td>ESTA O NECESITA TRATAMIENTO PEDAGÓGICO</td><td><input type="text" name="peda_titular" inputmode="text"></td><td><input type="text" name="peda_esposa" inputmode="text"></td><td><input type="text" name="peda_hijo1" inputmode="text"></td><td><input type="text" name="peda_hijo2" inputmode="text"></td><td><input type="text" name="peda_hijo3" inputmode="text"></td><td><input type="text" name="peda_hijo4" inputmode="text"></td><td><input type="text" name="peda_hijo5" inputmode="text"></td></tr>
+                    <tr><td>ESTA O NECESITA TRATAMIENTO OFTALMOLÓGICO</td><td><input type="text" name="oftalmo_titular" inputmode="text"></td><td><input type="text" name="oftalmo_esposa" inputmode="text"></td><td><input type="text" name="oftalmo_hijo1" inputmode="text"></td><td><input type="text" name="oftalmo_hijo2" inputmode="text"></td><td><input type="text" name="oftalmo_hijo3" inputmode="text"></td><td><input type="text" name="oftalmo_hijo4" inputmode="text"></td><td><input type="text" name="oftalmo_hijo5" inputmode="text"></td></tr>
+                    <tr><td>ESTA O NECESITA TRATAMIENTO ODONTOLÓGICO</td><td><input type="text" name="odonto_titular" inputmode="text"></td><td><input type="text" name="odonto_esposa" inputmode="text"></td><td><input type="text" name="odonto_hijo1" inputmode="text"></td><td><input type="text" name="odonto_hijo2" inputmode="text"></td><td><input type="text" name="odonto_hijo3" inputmode="text"></td><td><input type="text" name="odonto_hijo4" inputmode="text"></td><td><input type="text" name="odonto_hijo5" inputmode="text"></td></tr>
+                    <tr><td>ESTA TOMANDO ALGUNA MEDICACIÓN CRÓNICA - DETALLAR</td><td><input type="text" name="med_cronica_titular" inputmode="text"></td><td><input type="text" name="med_cronica_esposa" inputmode="text"></td><td><input type="text" name="med_cronica_hijo1" inputmode="text"></td><td><input type="text" name="med_cronica_hijo2" inputmode="text"></td><td><input type="text" name="med_cronica_hijo3" inputmode="text"></td><td><input type="text" name="med_cronica_hijo4" inputmode="text"></td><td><input type="text" name="med_cronica_hijo5" inputmode="text"></td></tr>
+                    <tr><td>ES ALÉRGICO A ALGÚN MEDICAMENTO - DETALLAR</td><td><input type="text" name="alergia_titular" inputmode="text"></td><td><input type="text" name="alergia_esposa" inputmode="text"></td><td><input type="text" name="alergia_hijo1" inputmode="text"></td><td><input type="text" name="alergia_hijo2" inputmode="text"></td><td><input type="text" name="alergia_hijo3" inputmode="text"></td><td><input type="text" name="alergia_hijo4" inputmode="text"></td><td><input type="text" name="alergia_hijo5" inputmode="text"></td></tr>
+                    <tr><td>TIENE PROBLEMAS DE VARICES</td><td><input type="text" name="varices_titular" inputmode="text"></td><td><input type="text" name="varices_esposa" inputmode="text"></td><td><input type="text" name="varices_hijo1" inputmode="text"></td><td><input type="text" name="varices_hijo2" inputmode="text"></td><td><input type="text" name="varices_hijo3" inputmode="text"></td><td><input type="text" name="varices_hijo4" inputmode="text"></td><td><input type="text" name="varices_hijo5" inputmode="text"></td></tr>
+                    <tr><td>TUVO O TIENE PRESIÓN ALTA</td><td><input type="text" name="presion_titular" inputmode="text"></td><td><input type="text" name="presion_esposa" inputmode="text"></td><td><input type="text" name="presion_hijo1" inputmode="text"></td><td><input type="text" name="presion_hijo2" inputmode="text"></td><td><input type="text" name="presion_hijo3" inputmode="text"></td><td><input type="text" name="presion_hijo4" inputmode="text"></td><td><input type="text" name="presion_hijo5" inputmode="text"></td></tr>
+                    <tr><td>TUVO O TIENE DIABETES</td><td><input type="text" name="diabetes_titular" inputmode="text"></td><td><input type="text" name="diabetes_esposa" inputmode="text"></td><td><input type="text" name="diabetes_hijo1" inputmode="text"></td><td><input type="text" name="diabetes_hijo2" inputmode="text"></td><td><input type="text" name="diabetes_hijo3" inputmode="text"></td><td><input type="text" name="diabetes_hijo4" inputmode="text"></td><td><input type="text" name="diabetes_hijo5" inputmode="text"></td></tr>
+                    <tr><td>ESTA EMBARAZADA (SI LO ESTÁ, ESPECIFIQUE DE CUANTOS MESES EN OBSERVACIONES)</td><td><input type="text" name="embarazo_titular" inputmode="text"></td><td><input type="text" name="embarazo_esposa" inputmode="text"></td><td><input type="text" name="embarazo_hijo1" inputmode="text"></td><td><input type="text" name="embarazo_hijo2" inputmode="text"></td><td><input type="text" name="embarazo_hijo3" inputmode="text"></td><td><input type="text" name="embarazo_hijo4" inputmode="text"></td><td><input type="text" name="embarazo_hijo5" inputmode="text"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h3>OBSERVACIONES, DETALLAR Y AGREGAR ALGUNA OTRA CONDICIÓN QUE NO ESTÉ MENCIONADA DENTRO DE ESTA DECLARACIÓN JURADA:</h3>
+            <textarea name="observaciones" rows="3" style="width: 100%;"></textarea>
+        </div>
+
+        <div class="section">
+            <label class="inline-label"><strong>DOMICILIO REAL:</strong> <input type="text" name="domicilio" inputmode="text"></label>
+            <label class="inline-label"><strong>N°:</strong> <input type="number" name="domicilio_numero"></label>
+            <label class="inline-label"><strong>PISO:</strong> <input type="text" name="piso" inputmode="text"></label>
+            <label class="inline-label"><strong>DTO:</strong> <input type="text" name="dto" inputmode="text"></label>
+            <label class="inline-label"><strong>BARRIO:</strong> <input type="text" name="barrio" inputmode="text"></label><br>
+            <label class="inline-label"><strong>PARTIDO:</strong> <input type="text" name="partido" inputmode="text"></label>
+            <label class="inline-label"><strong>COD. POSTAL:</strong> <input type="text" name="cod_postal" inputmode="numeric"></label>
+            <label class="inline-label"><strong>PROVINCIA:</strong> <input type="text" name="provincia" inputmode="text"></label>
+        </div>
+
+        <div class="section">
+            <label class="inline-label"><strong>TELÉFONO:</strong> <input type="tel" name="telefono"></label>
+            <label class="inline-label"><strong>CELULAR:</strong> <input type="tel" name="celular"></label>
+            <label class="inline-label"><strong>E-MAIL:</strong> <input type="email" name="email_contacto"></label>
+        </div>
+
+        <div class="section">
+            <h3>CONTACTO:</h3>
+            <label class="inline-label"><strong>APELLIDO Y NOMBRES:</strong> <input type="text" name="contacto_nombre" inputmode="text"></label>
+            <label class="inline-label"><strong>RELACIÓN:</strong> <input type="text" name="contacto_relacion" inputmode="text"></label><br>
+            <label class="inline-label"><strong>CELULAR:</strong> <input type="tel" name="contacto_celular"></label>
+            <label class="inline-label"><strong>DOMICILIO:</strong> <input type="text" name="contacto_domicilio" inputmode="text"></label>
+            <label class="inline-label"><strong>N°:</strong> <input type="number" name="contacto_numero"></label>
+            <label class="inline-label"><strong>BARRIO:</strong> <input type="text" name="contacto_barrio" inputmode="text"></label>
+        </div>
+
+        <div class="section">
+            <h3>ART (DEBERÁ RECTIFICAR LA ASEGURADORA CADA VEZ QUE EL EMPLEADOR CAMBIE DE PRESTADOR O QUE EL TRABAJADOR CAMBIE DE EMPLEADOR)</h3>
+        </div>
+
+        <div class="section">
+            <h3>Grupo Familiar:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>APELLIDO Y NOMBRES</th>
+                        <th>PARENTESCO</th>
+                        <th>DOCUMENTO</th>
+                        <th>FECHA DE NACIMIENTO</th>
+                        <th>OBSERV.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><input type="text" name="gf_nombre1" inputmode="text"></td><td><input type="text" name="gf_parentesco1" inputmode="text"></td><td><input type="text" name="gf_documento1" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac1"></td><td><input type="text" name="gf_observ1" inputmode="text"></td></tr>
+                    <tr><td><input type="text" name="gf_nombre2" inputmode="text"></td><td><input type="text" name="gf_parentesco2" inputmode="text"></td><td><input type="text" name="gf_documento2" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac2"></td><td><input type="text" name="gf_observ2" inputmode="text"></td></tr>
+                    <tr><td><input type="text" name="gf_nombre3" inputmode="text"></td><td><input type="text" name="gf_parentesco3" inputmode="text"></td><td><input type="text" name="gf_documento3" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac3"></td><td><input type="text" name="gf_observ3" inputmode="text"></td></tr>
+                    <tr><td><input type="text" name="gf_nombre4" inputmode="text"></td><td><input type="text" name="gf_parentesco4" inputmode="text"></td><td><input type="text" name="gf_documento4" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac4"></td><td><input type="text" name="gf_observ4" inputmode="text"></td></tr>
+                    <tr><td><input type="text" name="gf_nombre5" inputmode="text"></td><td><input type="text" name="gf_parentesco5" inputmode="text"></td><td><input type="text" name="gf_documento5" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac5"></td><td><input type="text" name="gf_observ5" inputmode="text"></td></tr>
+                    <tr><td><input type="text" name="gf_nombre6" inputmode="text"></td><td><input type="text" name="gf_parentesco6" inputmode="text"></td><td><input type="text" name="gf_documento6" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac6"></td><td><input type="text" name="gf_observ6" inputmode="text"></td></tr>
+                    <tr><td><input type="text" name="gf_nombre7" inputmode="text"></td><td><input type="text" name="gf_parentesco7" inputmode="text"></td><td><input type="text" name="gf_documento7" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac7"></td><td><input type="text" name="gf_observ7" inputmode="text"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <label class="inline-label"><strong>FIRMA:</strong> <input type="text" name="firma" style="display: none;" id="firmaInput"></label>
+            <canvas id="signatureCanvas" width="300" height="100"></canvas><br>
+            <button type="button" onclick="clearSignature()">Borrar Firma</button><br>
+            <label class="inline-label"><strong>ACLARACIÓN:</strong> <input type="text" name="aclaracion" inputmode="text"></label>
+            <label class="inline-label"><strong>DOCUMENTO:</strong> <input type="text" name="documento" inputmode="numeric"></label>
+            <label class="inline-label"><strong>FECHA:</strong> <input type="date" name="fecha"></label>
+        </div>
+
+        <div class="section">
+            <h3>Adjuntar Documentación</h3>
+            <input type="file" name="documentos" multiple accept="image/*,application/pdf">
+        </div>
+
+        <div class="section small-text">
+            <strong>IMPORTANTE:</strong><br>
+            SE DEJA EXPRESAMENTE ACLARADO QUE EL GRUPO FAMILIAR DEL AFILIADO PARA OBTENER LA COBERTURA DE LA OBRA SOCIAL DEBERÁ PRESENTAR TODA LA DOCUMENTACIÓN REQUERIDA.<br><br>
+            <strong>DOCUMENTACIÓN A PRESENTAR:</strong><br>
+            <strong>ESPOSA/O CÓNYUGE:</strong> CERTIFICADO DE CASAMIENTO EN EL CASO QUE ESTUVIERAN CASADOS LEGALMENTE. PARA CONVIVIENTE: CERTIFICADO DE CONCUBINATO CON DOS TESTIGOS NO MAYOR A 1 AÑO AL MOMENTO DE AFILIARSE. SI TUVIERA HIJOS QUE NO SON DEL TITULAR DEBERÁN DECLARARLOS EN EL CERTIFICADO DONDE DEBEN INFORMAR QUE ESTÁN A CARGO DEL TITULAR. FOTOCOPIA DE DOCUMENTO DE LOS DOS LADOS.<br>
+            <strong>HIJOS:</strong> CERTIFICADO DE NACIMIENTO, FOTOCOPIA DEL DOCUMENTO DE LOS DOS LADOS. EN CASO DE SER MAYOR A 21 AÑOS EL ORIGINAL DEL CERTIFICADO DE ESTUDIOS EMITIDO POR EL CENTRO DE ESTUDIOS.
+        </div>
+
+        <button type="submit" style="display: block; margin: 20px auto;">Enviar</button>
+    </form>
+
+    <p class="success" id="successMessage">¡Formulario enviado con éxito!</p>
+
+    <script>
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function getPosition(e) {
+            const rect = canvas.getBoundingClientRect();
+            if (e.type.includes('touch')) {
+                return {
+                    x: e.touches[0].clientX - rect.left,
+                    y: e.touches[0].clientY - rect.top
+                };
+            } else {
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+        }
+
+        function startDrawing(e) {
+            e.preventDefault();
+            drawing = true;
+            const pos = getPosition(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+
+        function draw(e) {
+            if (!drawing) return;
+            e.preventDefault();
+            const pos = getPosition(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            drawing = false;
+            ctx.closePath();
+        }
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById('healthForm'));
+            formData.append('signature', canvas.toDataURL());
+
+            fetch('URL_DE_TU_SCRIPT', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('healthForm').reset();
+                clearSignature();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'921dcc189af6c9a0',t:'MTc0MjIyODIxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
