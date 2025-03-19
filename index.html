@@ -416,13 +416,6 @@
             margin-top: 20px;
         }
         
-        .download-button-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-        
         /* Estilos para las previsualizaciones de imágenes */
         .image-preview-container {
             display: flex;
@@ -437,64 +430,6 @@
             object-fit: cover;
             border: 1px solid var(--border-color);
             border-radius: 4px;
-        }
-        
-        /* Estilos para el modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1050;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-        
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 0;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .modal-header {
-            padding: 15px;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-body {
-            padding: 20px;
-        }
-        
-        .modal-footer {
-            padding: 15px;
-            border-top: 1px solid #e9ecef;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        
-        .close-modal {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .close-modal:hover,
-        .close-modal:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
         }
         
         /* Estilos para el indicador de carga */
@@ -538,49 +473,32 @@
             border-color: var(--error-color);
         }
         
-        /* Estilos para el botón de Google Drive */
-        .google-drive-button {
-            background-color: #4285F4;
-            color: white;
+        /* Estilos para opciones predefinidas */
+        .predefined-options {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-wrap: wrap;
             gap: 10px;
-            padding: 10px 15px;
-            border-radius: 4px;
+            margin-top: 5px;
+        }
+        
+        .option-chip {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 15px;
+            transition: all 0.2s;
         }
         
-        .google-drive-button:hover {
-            background-color: #3367D6;
+        .option-chip:hover {
+            background-color: #e9ecef;
         }
         
-        .google-drive-icon {
-            width: 20px;
-            height: 20px;
-        }
-        
-        .google-drive-status {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 4px;
-            display: none;
-        }
-        
-        .google-drive-status.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            display: block;
-        }
-        
-        .google-drive-status.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            display: block;
+        .option-chip.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
         
         @media (max-width: 768px) {
@@ -610,11 +528,6 @@
             
             .step-title {
                 display: none;
-            }
-            
-            .download-button-container {
-                bottom: 10px;
-                right: 10px;
             }
             
             .image-preview {
@@ -647,10 +560,6 @@
             .form-section {
                 display: block;
             }
-            
-            .download-button-container {
-                display: none;
-            }
         }
     </style>
 </head>
@@ -659,22 +568,16 @@
         <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <!-- Botón flotante para descargar PDF en cualquier momento -->
-    <div class="download-button-container">
-        <button type="button" class="btn btn-success" onclick="downloadPDF()">
-            Descargar PDF
-        </button>
-    </div>
-
     <!-- Indicador de carga -->
     <div id="loadingIndicator" style="display: none;">
         <div class="spinner"></div>
-        <p style="margin-top: 15px;" id="loadingText">Generando PDF, por favor espere...</p>
+        <p style="margin-top: 15px;" id="loadingText">Procesando, por favor espere...</p>
     </div>
 
     <div class="container" id="formContainer">
         <div class="header">
-            <img src="https://racais.com.ar/img/obrasSociales/ospetax.jpg" alt="Logo OSPETAX" class="logo" id="logoOspetax" crossorigin="anonymous">
+            <!-- Actualizado con el nuevo logo -->
+            <img src="https://nueva-url-del-logo-ospetax.jpg" alt="Logo OSPETAX" class="logo" id="logoOspetax" crossorigin="anonymous">
             <div class="header-text">
                 <h1>OBRA SOCIAL DE PEONES DE TAXI DE LA CAPITAL FEDERAL</h1>
                 <p>RNOS 1-2370-1</p>
@@ -792,7 +695,33 @@
                         </div>
                         <div class="form-col">
                             <label for="provincia" class="required">Provincia</label>
-                            <input type="text" id="provincia" name="provincia" required>
+                            <select id="provincia" name="provincia" required>
+                                <option value="">Seleccione una provincia</option>
+                                <option value="Buenos Aires">Buenos Aires</option>
+                                <option value="CABA">Ciudad Autónoma de Buenos Aires</option>
+                                <option value="Catamarca">Catamarca</option>
+                                <option value="Chaco">Chaco</option>
+                                <option value="Chubut">Chubut</option>
+                                <option value="Córdoba">Córdoba</option>
+                                <option value="Corrientes">Corrientes</option>
+                                <option value="Entre Ríos">Entre Ríos</option>
+                                <option value="Formosa">Formosa</option>
+                                <option value="Jujuy">Jujuy</option>
+                                <option value="La Pampa">La Pampa</option>
+                                <option value="La Rioja">La Rioja</option>
+                                <option value="Mendoza">Mendoza</option>
+                                <option value="Misiones">Misiones</option>
+                                <option value="Neuquén">Neuquén</option>
+                                <option value="Río Negro">Río Negro</option>
+                                <option value="Salta">Salta</option>
+                                <option value="San Juan">San Juan</option>
+                                <option value="San Luis">San Luis</option>
+                                <option value="Santa Cruz">Santa Cruz</option>
+                                <option value="Santa Fe">Santa Fe</option>
+                                <option value="Santiago del Estero">Santiago del Estero</option>
+                                <option value="Tierra del Fuego">Tierra del Fuego</option>
+                                <option value="Tucumán">Tucumán</option>
+                            </select>
                             <div class="validation-error" id="provincia_error">Este campo es obligatorio</div>
                         </div>
                     </div>
@@ -827,7 +756,15 @@
                         </div>
                         <div class="form-col">
                             <label for="contacto_relacion" class="required">Relación</label>
-                            <input type="text" id="contacto_relacion" name="contacto_relacion" required>
+                            <select id="contacto_relacion" name="contacto_relacion" required>
+                                <option value="">Seleccione una relación</option>
+                                <option value="Cónyuge">Cónyuge</option>
+                                <option value="Hijo/a">Hijo/a</option>
+                                <option value="Padre/Madre">Padre/Madre</option>
+                                <option value="Hermano/a">Hermano/a</option>
+                                <option value="Amigo/a">Amigo/a</option>
+                                <option value="Otro">Otro</option>
+                            </select>
                             <div class="validation-error" id="contacto_relacion_error">Este campo es obligatorio</div>
                         </div>
                     </div>
@@ -911,13 +848,55 @@
                                 </tr>
                                 <tr>
                                     <td>Fuma / Ctos</td>
-                                    <td><input type="text" name="fuma_titular"></td>
-                                    <td><input type="text" name="fuma_esposa"></td>
-                                    <td><input type="text" name="fuma_hijo1"></td>
-                                    <td><input type="text" name="fuma_hijo2"></td>
-                                    <td><input type="text" name="fuma_hijo3"></td>
-                                    <td><input type="text" name="fuma_hijo4"></td>
-                                    <td><input type="text" name="fuma_hijo5"></td>
+                                    <td>
+                                        <select name="fuma_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="fuma_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="fuma_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="fuma_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="fuma_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="fuma_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="fuma_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Cirugías realizadas anteriores - Detallar</td>
@@ -961,53 +940,263 @@
                                 </tr>
                                 <tr>
                                     <td>Está o necesita tratamiento psicológico</td>
-                                    <td><input type="text" name="psico_titular"></td>
-                                    <td><input type="text" name="psico_esposa"></td>
-                                    <td><input type="text" name="psico_hijo1"></td>
-                                    <td><input type="text" name="psico_hijo2"></td>
-                                    <td><input type="text" name="psico_hijo3"></td>
-                                    <td><input type="text" name="psico_hijo4"></td>
-                                    <td><input type="text" name="psico_hijo5"></td>
+                                    <td>
+                                        <select name="psico_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="psico_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="psico_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="psico_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="psico_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="psico_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="psico_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Está o necesita tratamiento nutricional</td>
-                                    <td><input type="text" name="nutri_titular"></td>
-                                    <td><input type="text" name="nutri_esposa"></td>
-                                    <td><input type="text" name="nutri_hijo1"></td>
-                                    <td><input type="text" name="nutri_hijo2"></td>
-                                    <td><input type="text" name="nutri_hijo3"></td>
-                                    <td><input type="text" name="nutri_hijo4"></td>
-                                    <td><input type="text" name="nutri_hijo5"></td>
+                                    <td>
+                                        <select name="nutri_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="nutri_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="nutri_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="nutri_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="nutri_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="nutri_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="nutri_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Está o necesita tratamiento pedagógico</td>
-                                    <td><input type="text" name="peda_titular"></td>
-                                    <td><input type="text" name="peda_esposa"></td>
-                                    <td><input type="text" name="peda_hijo1"></td>
-                                    <td><input type="text" name="peda_hijo2"></td>
-                                    <td><input type="text" name="peda_hijo3"></td>
-                                    <td><input type="text" name="peda_hijo4"></td>
-                                    <td><input type="text" name="peda_hijo5"></td>
+                                    <td>
+                                        <select name="peda_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="peda_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="peda_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="peda_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="peda_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="peda_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="peda_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Está o necesita tratamiento oftalmológico</td>
-                                    <td><input type="text" name="oftalmo_titular"></td>
-                                    <td><input type="text" name="oftalmo_esposa"></td>
-                                    <td><input type="text" name="oftalmo_hijo1"></td>
-                                    <td><input type="text" name="oftalmo_hijo2"></td>
-                                    <td><input type="text" name="oftalmo_hijo3"></td>
-                                    <td><input type="text" name="oftalmo_hijo4"></td>
-                                    <td><input type="text" name="oftalmo_hijo5"></td>
+                                    <td>
+                                        <select name="oftalmo_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="oftalmo_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="oftalmo_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="oftalmo_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="oftalmo_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="oftalmo_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="oftalmo_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Está o necesita tratamiento odontológico</td>
-                                    <td><input type="text" name="odonto_titular"></td>
-                                    <td><input type="text" name="odonto_esposa"></td>
-                                    <td><input type="text" name="odonto_hijo1"></td>
-                                    <td><input type="text" name="odonto_hijo2"></td>
-                                    <td><input type="text" name="odonto_hijo3"></td>
-                                    <td><input type="text" name="odonto_hijo4"></td>
-                                    <td><input type="text" name="odonto_hijo5"></td>
+                                    <td>
+                                        <select name="odonto_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="odonto_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="odonto_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="odonto_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="odonto_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="odonto_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="odonto_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Está tomando alguna medicación crónica - Detallar</td>
@@ -1031,43 +1220,211 @@
                                 </tr>
                                 <tr>
                                     <td>Tiene problemas de varices</td>
-                                    <td><input type="text" name="varices_titular"></td>
-                                    <td><input type="text" name="varices_esposa"></td>
-                                    <td><input type="text" name="varices_hijo1"></td>
-                                    <td><input type="text" name="varices_hijo2"></td>
-                                    <td><input type="text" name="varices_hijo3"></td>
-                                    <td><input type="text" name="varices_hijo4"></td>
-                                    <td><input type="text" name="varices_hijo5"></td>
+                                    <td>
+                                        <select name="varices_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="varices_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="varices_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="varices_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="varices_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="varices_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="varices_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Tuvo o tiene presión alta</td>
-                                    <td><input type="text" name="presion_titular"></td>
-                                    <td><input type="text" name="presion_esposa"></td>
-                                    <td><input type="text" name="presion_hijo1"></td>
-                                    <td><input type="text" name="presion_hijo2"></td>
-                                    <td><input type="text" name="presion_hijo3"></td>
-                                    <td><input type="text" name="presion_hijo4"></td>
-                                    <td><input type="text" name="presion_hijo5"></td>
+                                    <td>
+                                        <select name="presion_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="presion_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="presion_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="presion_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="presion_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="presion_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="presion_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Tuvo o tiene diabetes</td>
-                                    <td><input type="text" name="diabetes_titular"></td>
-                                    <td><input type="text" name="diabetes_esposa"></td>
-                                    <td><input type="text" name="diabetes_hijo1"></td>
-                                    <td><input type="text" name="diabetes_hijo2"></td>
-                                    <td><input type="text" name="diabetes_hijo3"></td>
-                                    <td><input type="text" name="diabetes_hijo4"></td>
-                                    <td><input type="text" name="diabetes_hijo5"></td>
+                                    <td>
+                                        <select name="diabetes_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="diabetes_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="diabetes_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="diabetes_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="diabetes_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="diabetes_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="diabetes_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Está embarazada (Si lo está, especifique de cuantos meses en observaciones)</td>
-                                    <td><input type="text" name="embarazo_titular"></td>
-                                    <td><input type="text" name="embarazo_esposa"></td>
-                                    <td><input type="text" name="embarazo_hijo1"></td>
-                                    <td><input type="text" name="embarazo_hijo2"></td>
-                                    <td><input type="text" name="embarazo_hijo3"></td>
-                                    <td><input type="text" name="embarazo_hijo4"></td>
-                                    <td><input type="text" name="embarazo_hijo5"></td>
+                                    <td>
+                                        <select name="embarazo_titular">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="embarazo_esposa">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="embarazo_hijo1">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="embarazo_hijo2">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="embarazo_hijo3">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="embarazo_hijo4">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="embarazo_hijo5">
+                                            <option value="">Seleccione</option>
+                                            <option value="No">No</option>
+                                            <option value="Sí">Sí</option>
+                                        </select>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1107,49 +1464,112 @@
                         <tbody>
                             <tr>
                                 <td><input type="text" name="gf_nombre1"></td>
-                                <td><input type="text" name="gf_parentesco1"></td>
+                                <td>
+                                    <select name="gf_parentesco1">
+                                        <option value="">Seleccione</option>
+                                        <option value="Cónyuge">Cónyuge</option>
+                                        <option value="Hijo/a">Hijo/a</option>
+                                        <option value="Padre/Madre">Padre/Madre</option>
+                                        <option value="Hermano/a">Hermano/a</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </td>
                                 <td><input type="text" name="gf_documento1"></td>
                                 <td><input type="date" name="gf_fecha_nac1"></td>
                                 <td><input type="text" name="gf_observ1"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre2"></td>
-                                <td><input type="text" name="gf_parentesco2"></td>
+                                <td>
+                                    <select name="gf_parentesco2">
+                                        <option value="">Seleccione</option>
+                                        <option value="Cónyuge">Cónyuge</option>
+                                        <option value="Hijo/a">Hijo/a</option>
+                                        <option value="Padre/Madre">Padre/Madre</option>
+                                        <option value="Hermano/a">Hermano/a</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </td>
                                 <td><input type="text" name="gf_documento2"></td>
                                 <td><input type="date" name="gf_fecha_nac2"></td>
                                 <td><input type="text" name="gf_observ2"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre3"></td>
-                                <td><input type="text" name="gf_parentesco3"></td>
+                                <td>
+                                    <select name="gf_parentesco3">
+                                        <option value="">Seleccione</option>
+                                        <option value="Cónyuge">Cónyuge</option>
+                                        <option value="Hijo/a">Hijo/a</option>
+                                        <option value="Padre/Madre">Padre/Madre</option>
+                                        <option value="Hermano/a">Hermano/a</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </td>
                                 <td><input type="text" name="gf_documento3"></td>
                                 <td><input type="date" name="gf_fecha_nac3"></td>
                                 <td><input type="text" name="gf_observ3"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre4"></td>
-                                <td><input type="text" name="gf_parentesco4"></td>
+                                <td>
+                                    <select name="gf_parentesco4">
+                                        <option value="">Seleccione</option>
+                                        <option value="Cónyuge">Cónyuge</option>
+                                        <option value="Hijo/a">Hijo/a</option>
+                                        <option value="Padre/Madre">Padre/Madre</option>
+                                        <option value="Hermano/a">Hermano/a</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </td>
                                 <td><input type="text" name="gf_documento4"></td>
                                 <td><input type="date" name="gf_fecha_nac4"></td>
                                 <td><input type="text" name="gf_observ4"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre5"></td>
-                                <td><input type="text" name="gf_parentesco5"></td>
+                                <td>
+                                    <select name="gf_parentesco5">
+                                        <option value="">Seleccione</option>
+                                        <option value="Cónyuge">Cónyuge</option>
+                                        <option value="Hijo/a">Hijo/a</option>
+                                        <option value="Padre/Madre">Padre/Madre</option>
+                                        <option value="Hermano/a">Hermano/a</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </td>
                                 <td><input type="text" name="gf_documento5"></td>
                                 <td><input type="date" name="gf_fecha_nac5"></td>
                                 <td><input type="text" name="gf_observ5"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre6"></td>
-                                <td><input type="text" name="gf_parentesco6"></td>
+                                <td>
+                                    <select name="gf_parentesco6">
+                                        <option value="">Seleccione</option>
+                                        <option value="Cónyuge">Cónyuge</option>
+                                        <option value="Hijo/a">Hijo/a</option>
+                                        <option value="Padre/Madre">Padre/Madre</option>
+                                        <option value="Hermano/a">Hermano/a</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </td>
                                 <td><input type="text" name="gf_documento6"></td>
                                 <td><input type="date" name="gf_fecha_nac6"></td>
                                 <td><input type="text" name="gf_observ6"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre7"></td>
-                                <td><input type="text" name="gf_parentesco7"></td>
+                                <td>
+                                    <select name="gf_parentesco7">
+                                        <option value="">Seleccione</option>
+                                        <option value="Cónyuge">Cónyuge</option>
+                                        <option value="Hijo/a">Hijo/a</option>
+                                        <option value="Padre/Madre">Padre/Madre</option>
+                                        <option value="Hermano/a">Hermano/a</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </td>
                                 <td><input type="text" name="gf_documento7"></td>
                                 <td><input type="date" name="gf_fecha_nac7"></td>
                                 <td><input type="text" name="gf_observ7"></td>
@@ -1229,14 +1649,6 @@
                             <div class="validation-error" id="fecha_error">Este campo es obligatorio</div>
                         </div>
                     </div>
-                    
-                    <div class="form-group mt-4">
-                        <div class="google-drive-button" id="saveToGoogleDrive">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/512px-Google_Drive_icon_%282020%29.svg.png" alt="Google Drive" class="google-drive-icon">
-                            <span>Guardar en Google Drive</span>
-                        </div>
-                        <div class="google-drive-status" id="googleDriveStatus"></div>
-                    </div>
                 </div>
 
                 <div class="form-navigation">
@@ -1249,29 +1661,11 @@
         <div class="success-message" id="successMessage">
             <h3>¡Formulario enviado con éxito!</h3>
             <p>El formulario se ha completado correctamente y se ha guardado en Google Drive. Para acceder a la credencial deberá comunicarse con la casilla de <strong>afiliaciones@conexionsalud.com.ar</strong></p>
-            <button type="button" class="btn mt-4" onclick="downloadPDF()">Descargar PDF</button>
         </div>
 
         <div class="error-message" id="errorMessage">
             <h3>Error al enviar el formulario</h3>
             <p>Por favor, verifique los datos ingresados e intente nuevamente.</p>
-        </div>
-
-        <div id="confirmModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Confirmación</h3>
-                    <span class="close-modal">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <p>¿Está seguro que desea descargar el formulario en PDF?</p>
-                    <p class="small-text">Tenga en cuenta que el PDF incluirá todos los datos ingresados hasta el momento.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="cancelDownload">Cancelar</button>
-                    <button type="button" class="btn" id="confirmDownload">Descargar PDF</button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -1284,20 +1678,20 @@
         let lastY = 0;
         let uploadedFiles = [];
         let imagePreviewsForPDF = [];
-        let googleDriveAccessToken = null;
         
-        // Configuración de Google Drive API
-        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // Reemplazar con tu Client ID
+        // Configuración de Google Cloud API
         const API_KEY = 'YOUR_GOOGLE_API_KEY'; // Reemplazar con tu API Key
-        const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
-        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // Reemplazar con tu Client ID
+        const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID'; // ID de la hoja de cálculo de Google
+        const DRIVE_FOLDER_ID = 'YOUR_DRIVE_FOLDER_ID'; // ID de la carpeta en Google Drive
         
         // Configuración inicial
         document.addEventListener('DOMContentLoaded', function() {
             setupSignatureCanvas();
             setupFileUpload();
             setupDateAutoFill();
-            setupGoogleDriveButton();
+            setupPredefinedOptions();
+            loadGoogleAPIs();
             
             // Establecer la fecha actual en el campo de fecha
             const today = new Date().toISOString().split('T')[0];
@@ -1307,117 +1701,45 @@
             preloadLogo();
         });
         
-        // Configuración de Google Drive
-        function setupGoogleDriveButton() {
-            document.getElementById('saveToGoogleDrive').addEventListener('click', function() {
-                if (!googleDriveAccessToken) {
-                    initGoogleDriveAPI();
-                } else {
-                    savePDFToGoogleDrive();
-                }
+        // Cargar las APIs de Google
+        function loadGoogleAPIs() {
+            // Cargar la API de Google Drive
+            gapi.load('client:auth2', initGoogleAPIs);
+        }
+        
+        // Inicializar las APIs de Google
+        function initGoogleAPIs() {
+            gapi.client.init({
+                apiKey: API_KEY,
+                clientId: CLIENT_ID,
+                discoveryDocs: [
+                    'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
+                    'https://sheets.googleapis.com/$discovery/rest?version=v4'
+                ],
+                scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets'
+            }).then(function() {
+                console.log('Google APIs inicializadas correctamente');
+            }).catch(function(error) {
+                console.error('Error al inicializar Google APIs:', error);
             });
         }
         
-        function initGoogleDriveAPI() {
-            gapi.load('client:auth2', () => {
-                gapi.client.init({
-                    apiKey: API_KEY,
-                    clientId: CLIENT_ID,
-                    discoveryDocs: DISCOVERY_DOCS,
-                    scope: SCOPES
-                }).then(() => {
-                    // Escuchar eventos de inicio de sesión
-                    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+        // Configurar opciones predefinidas
+        function setupPredefinedOptions() {
+            // Implementar selección de opciones predefinidas si es necesario
+            const optionChips = document.querySelectorAll('.option-chip');
+            optionChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    const input = this.parentElement.previousElementSibling;
+                    input.value = this.textContent;
                     
-                    // Manejar el estado de inicio de sesión inicial
-                    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                    
-                    // Iniciar sesión si no está autenticado
-                    if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                        gapi.auth2.getAuthInstance().signIn();
-                    }
-                }).catch(error => {
-                    console.error('Error al inicializar Google Drive API:', error);
-                    updateGoogleDriveStatus('Error al conectar con Google Drive. Por favor, intente nuevamente.', false);
+                    // Actualizar estado visual
+                    this.parentElement.querySelectorAll('.option-chip').forEach(c => {
+                        c.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
                 });
             });
-        }
-        
-        function updateSigninStatus(isSignedIn) {
-            if (isSignedIn) {
-                googleDriveAccessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
-                updateGoogleDriveStatus('Conectado a Google Drive. Listo para guardar el formulario.', true);
-            } else {
-                googleDriveAccessToken = null;
-                updateGoogleDriveStatus('No conectado a Google Drive.', false);
-            }
-        }
-        
-        function updateGoogleDriveStatus(message, success) {
-            const statusElement = document.getElementById('googleDriveStatus');
-            statusElement.textContent = message;
-            statusElement.className = 'google-drive-status';
-            if (success) {
-                statusElement.classList.add('success');
-            } else {
-                statusElement.classList.add('error');
-            }
-        }
-        
-        async function savePDFToGoogleDrive() {
-            if (!googleDriveAccessToken) {
-                updateGoogleDriveStatus('No está conectado a Google Drive. Por favor, inicie sesión.', false);
-                return;
-            }
-            
-            try {
-                // Mostrar indicador de carga
-                document.getElementById('loadingIndicator').style.display = 'flex';
-                document.getElementById('loadingText').textContent = 'Guardando en Google Drive...';
-                
-                // Generar el PDF
-                const pdfBlob = await generatePDFBlob();
-                
-                // Obtener el CUIT para el nombre del archivo
-                const cuit = document.getElementById('titular_cuit').value || 'formulario';
-                const fileName = `Declaracion_Jurada_OSPETAX_${cuit}.pdf`;
-                
-                // Crear el archivo en Google Drive
-                const metadata = {
-                    name: fileName,
-                    mimeType: 'application/pdf',
-                };
-                
-                const form = new FormData();
-                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                form.append('file', pdfBlob);
-                
-                const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${googleDriveAccessToken}`,
-                    },
-                    body: form,
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Error al guardar el archivo en Google Drive');
-                }
-                
-                const result = await response.json();
-                
-                // Actualizar el estado
-                updateGoogleDriveStatus(`Formulario guardado correctamente en Google Drive como "${fileName}"`, true);
-                
-                return result;
-            } catch (error) {
-                console.error('Error al guardar en Google Drive:', error);
-                updateGoogleDriveStatus('Error al guardar en Google Drive. Por favor, intente nuevamente.', false);
-                throw error;
-            } finally {
-                // Ocultar indicador de carga
-                document.getElementById('loadingIndicator').style.display = 'none';
-            }
         }
         
         // Precargar el logo
@@ -1685,7 +2007,7 @@
         
         function validateSection(sectionNumber) {
             const section = document.getElementById(`section${sectionNumber}`);
-            const fields = section.querySelectorAll('input, textarea, select');
+            const fields = section.querySelectorAll('input[required], textarea[required], select[required]');
             
             let isValid = true;
             
@@ -1753,211 +2075,101 @@
             document.getElementById('progressBar').style.width = `${progress}%`;
         }
         
-        // Función para descargar PDF
-        function downloadPDF() {
-            // Mostrar el modal de confirmación
-            const modal = document.getElementById('confirmModal');
-            modal.style.display = 'block';
-            
-            // Configurar los botones del modal
-            document.getElementById('confirmDownload').onclick = function() {
-                modal.style.display = 'none';
-                generateAndDownloadPDF();
-            };
-            
-            document.getElementById('cancelDownload').onclick = function() {
-                modal.style.display = 'none';
-            };
-            
-            document.querySelector('.close-modal').onclick = function() {
-                modal.style.display = 'none';
-            };
-            
-            // Cerrar el modal si se hace clic fuera de él
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            };
-        }
-        
-        // Función para generar y descargar el PDF
-        async function generateAndDownloadPDF() {
+        // Generar PDF con imágenes en páginas separadas
+        async function generatePDF() {
             // Mostrar indicador de carga
             document.getElementById('loadingIndicator').style.display = 'flex';
             document.getElementById('loadingText').textContent = 'Generando PDF, por favor espere...';
             
             try {
-                const pdfBlob = await generatePDFBlob();
+                // Asegurarse de que el logo esté cargado
+                const logoImg = document.getElementById('logoOspetax');
                 
-                // Crear un enlace para descargar el PDF
-                const url = URL.createObjectURL(pdfBlob);
-                const a = document.createElement('a');
-                const cuit = document.getElementById('titular_cuit').value || 'formulario';
-                a.href = url;
-                a.download = `Declaracion_Jurada_OSPETAX_${cuit}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                
-                // Limpiar
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }, 100);
-            } catch (error) {
-                console.error('Error al generar el PDF:', error);
-                alert('Ocurrió un error al generar el PDF. Por favor, intente nuevamente.');
-            } finally {
-                // Ocultar indicador de carga
-                document.getElementById('loadingIndicator').style.display = 'none';
-            }
-        }
-        
-        // Función para generar el PDF como Blob
-        async function generatePDFBlob() {
-            // Asegurarse de que el logo esté cargado
-            const logoImg = document.getElementById('logoOspetax');
-            
-            // Esperar a que el logo se cargue completamente
-            if (!logoImg.complete) {
-                await new Promise(resolve => {
-                    logoImg.onload = resolve;
-                    logoImg.onerror = resolve; // Continuar incluso si hay error
-                });
-            }
-            
-            // Crear un clon del contenedor para no modificar el original
-            const formContainer = document.getElementById('formContainer');
-            const clone = formContainer.cloneNode(true);
-            
-            // Aplicar estilos para el PDF
-            clone.style.background = 'white';
-            clone.style.padding = '20px';
-            clone.style.maxWidth = '100%';
-            clone.style.position = 'absolute';
-            clone.style.left = '-9999px';
-            clone.style.top = '0';
-            
-            // Asegurarse de que todas las secciones sean visibles en el clon
-            const sections = clone.querySelectorAll('.form-section');
-            sections.forEach(section => {
-                section.style.display = 'block';
-                section.classList.add('active');
-            });
-            
-            // Ocultar elementos de navegación y botones en el clon
-            const elementsToHide = clone.querySelectorAll('.form-navigation, .step-indicator, .progress-container, .download-button-container, .modal, .file-upload, .file-list, .validation-error, .google-drive-button, .google-drive-status');
-            elementsToHide.forEach(el => {
-                el.style.display = 'none';
-            });
-            
-            // Ocultar el mensaje de éxito en el clon
-            const successMessage = clone.querySelector('.success-message');
-            if (successMessage) {
-                successMessage.style.display = 'none';
-            }
-            
-            // Añadir título para el PDF
-            const title = document.createElement('h1');
-            title.textContent = 'DECLARACIÓN JURADA DE SALUD - OSPETAX';
-            title.style.textAlign = 'center';
-            title.style.marginBottom = '20px';
-            title.style.color = '#0056b3';
-            
-            // Añadir fecha de generación
-            const dateInfo = document.createElement('p');
-            const today = new Date();
-            dateInfo.textContent = `Documento generado el: ${today.toLocaleDateString('es-AR')}`;
-            dateInfo.style.textAlign = 'right';
-            dateInfo.style.fontSize = '12px';
-            dateInfo.style.marginBottom = '30px';
-            
-            // Insertar título y fecha al principio del clon
-            clone.insertBefore(dateInfo, clone.firstChild);
-            clone.insertBefore(title, clone.firstChild);
-            
-            // Asegurarse de que la firma se muestre en el PDF
-            const originalSignatureCanvas = document.getElementById('signatureCanvas');
-            const signatureDataURL = document.getElementById('firmaInput').value;
-            
-            if (signatureDataURL) {
-                const signatureSection = clone.querySelector('.signature-container');
-                const cloneCanvas = signatureSection.querySelector('canvas');
-                
-                // Reemplazar el canvas con una imagen de la firma
-                const signatureImg = document.createElement('img');
-                signatureImg.src = signatureDataURL;
-                signatureImg.style.width = '100%';
-                signatureImg.style.maxWidth = '400px';
-                signatureImg.style.border = '1px solid #dee2e6';
-                signatureImg.style.borderRadius = '4px';
-                
-                if (cloneCanvas) {
-                    cloneCanvas.replaceWith(signatureImg);
-                } else {
-                    signatureSection.appendChild(signatureImg);
+                // Esperar a que el logo se cargue completamente
+                if (!logoImg.complete) {
+                    await new Promise(resolve => {
+                        logoImg.onload = resolve;
+                        logoImg.onerror = resolve; // Continuar incluso si hay error
+                    });
                 }
-            }
-            
-            // Añadir las imágenes adjuntadas al PDF
-            if (imagePreviewsForPDF.length > 0) {
-                const docsSection = clone.querySelector('#section4 .card');
                 
-                // Crear un contenedor para las imágenes
-                const imagesContainer = document.createElement('div');
-                imagesContainer.style.marginTop = '20px';
+                // Crear un clon del contenedor para no modificar el original
+                const formContainer = document.getElementById('formContainer');
+                const clone = formContainer.cloneNode(true);
                 
-                // Añadir título para las imágenes
-                const imagesTitle = document.createElement('h3');
-                imagesTitle.textContent = 'Documentación Adjunta';
-                imagesTitle.style.marginBottom = '15px';
-                imagesContainer.appendChild(imagesTitle);
+                // Aplicar estilos para el PDF
+                clone.style.background = 'white';
+                clone.style.padding = '20px';
+                clone.style.maxWidth = '100%';
+                clone.style.position = 'absolute';
+                clone.style.left = '-9999px';
+                clone.style.top = '0';
                 
-                // Añadir cada imagen
-                imagePreviewsForPDF.forEach((imgData, index) => {
-                    const imgContainer = document.createElement('div');
-                    imgContainer.style.marginBottom = '15px';
-                    
-                    const imgTitle = document.createElement('p');
-                    imgTitle.textContent = `Documento ${index + 1}: ${imgData.name}`;
-                    imgTitle.style.fontWeight = 'bold';
-                    imgTitle.style.marginBottom = '5px';
-                    
-                    const img = document.createElement('img');
-                    img.src = imgData.src;
-                    img.style.maxWidth = '100%';
-                    img.style.maxHeight = '300px';
-                    img.style.border = '1px solid #dee2e6';
-                    img.style.borderRadius = '4px';
-                    
-                    imgContainer.appendChild(imgTitle);
-                    imgContainer.appendChild(img);
-                    imagesContainer.appendChild(imgContainer);
+                // Asegurarse de que todas las secciones sean visibles en el clon
+                const sections = clone.querySelectorAll('.form-section');
+                sections.forEach(section => {
+                    section.style.display = 'block';
+                    section.classList.add('active');
                 });
                 
-                docsSection.appendChild(imagesContainer);
-            }
-            
-            // Añadir el clon al documento para poder capturarlo
-            document.body.appendChild(clone);
-            
-            // Configurar opciones para html2canvas
-            const options = {
-                scale: 1,
-                useCORS: true,
-                allowTaint: true,
-                logging: false,
-                scrollY: 0
-            };
-            
-            try {
-                // Capturar el formulario
-                const canvas = await html2canvas(clone, options);
+                // Ocultar elementos de navegación y botones en el clon
+                const elementsToHide = clone.querySelectorAll('.form-navigation, .step-indicator, .progress-container, .modal, .file-upload, .file-list, .validation-error');
+                elementsToHide.forEach(el => {
+                    el.style.display = 'none';
+                });
                 
-                // Eliminar el clon después de capturarlo
-                document.body.removeChild(clone);
+                // Ocultar el mensaje de éxito en el clon
+                const successMessage = clone.querySelector('.success-message');
+                if (successMessage) {
+                    successMessage.style.display = 'none';
+                }
                 
-                const imgData = canvas.toDataURL('image/png');
+                // Añadir título para el PDF
+                const title = document.createElement('h1');
+                title.textContent = 'DECLARACIÓN JURADA DE SALUD - OSPETAX';
+                title.style.textAlign = 'center';
+                title.style.marginBottom = '20px';
+                title.style.color = '#0056b3';
+                
+                // Añadir fecha de generación
+                const dateInfo = document.createElement('p');
+                const today = new Date();
+                dateInfo.textContent = `Documento generado el: ${today.toLocaleDateString('es-AR')}`;
+                dateInfo.style.textAlign = 'right';
+                dateInfo.style.fontSize = '12px';
+                dateInfo.style.marginBottom = '30px';
+                
+                // Insertar título y fecha al principio del clon
+                clone.insertBefore(dateInfo, clone.firstChild);
+                clone.insertBefore(title, clone.firstChild);
+                
+                // Asegurarse de que la firma se muestre en el PDF
+                const originalSignatureCanvas = document.getElementById('signatureCanvas');
+                const signatureDataURL = document.getElementById('firmaInput').value;
+                
+                if (signatureDataURL) {
+                    const signatureSection = clone.querySelector('.signature-container');
+                    const cloneCanvas = signatureSection.querySelector('canvas');
+                    
+                    // Reemplazar el canvas con una imagen de la firma
+                    const signatureImg = document.createElement('img');
+                    signatureImg.src = signatureDataURL;
+                    signatureImg.style.width = '100%';
+                    signatureImg.style.maxWidth = '400px';
+                    signatureImg.style.border = '1px solid #dee2e6';
+                    signatureImg.style.borderRadius = '4px';
+                    
+                    if (cloneCanvas) {
+                        cloneCanvas.replaceWith(signatureImg);
+                    } else {
+                        signatureSection.appendChild(signatureImg);
+                    }
+                }
+                
+                // Añadir el clon al documento para poder capturarlo
+                document.body.appendChild(clone);
+                
+                // Inicializar jsPDF
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 
@@ -1965,29 +2177,188 @@
                 const pageWidth = pdf.internal.pageSize.getWidth();
                 const pageHeight = pdf.internal.pageSize.getHeight();
                 
+                // Configurar opciones para html2canvas
+                const options = {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false,
+                    scrollY: 0
+                };
+                
+                // Capturar el formulario
+                const canvas = await html2canvas(clone, options);
+                
+                // Eliminar el clon después de capturarlo
+                document.body.removeChild(clone);
+                
+                const imgData = canvas.toDataURL('image/png');
+                
                 // Calcular dimensiones manteniendo la proporción
-                const imgWidth = pageWidth;
+                const imgWidth = pageWidth - 20; // Margen de 10mm en cada lado
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 
+                // Añadir la primera página con el formulario
+                pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+                
+                // Añadir páginas adicionales si el formulario es muy largo
                 let heightLeft = imgHeight;
-                let position = 0;
+                let position = 10;
                 
-                // Añadir la primera página
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-                
-                // Añadir páginas adicionales si es necesario
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
+                while (heightLeft > pageHeight - 20) {
+                    position = position - (pageHeight - 20);
                     pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= (pageHeight - 20);
+                }
+                
+                // Añadir imágenes adjuntas en páginas separadas
+                if (imagePreviewsForPDF.length > 0) {
+                    for (let i = 0; i < imagePreviewsForPDF.length; i++) {
+                        const imgData = imagePreviewsForPDF[i];
+                        
+                        // Crear una imagen para obtener dimensiones
+                        const img = new Image();
+                        img.src = imgData.src;
+                        
+                        // Esperar a que la imagen se cargue
+                        await new Promise(resolve => {
+                            img.onload = resolve;
+                            img.onerror = resolve;
+                        });
+                        
+                        // Añadir una nueva página para cada imagen
+                        pdf.addPage();
+                        
+                        // Añadir título de la imagen
+                        pdf.setFontSize(14);
+                        pdf.setTextColor(0, 86, 179);
+                        pdf.text(`Documento adjunto: ${imgData.name}`, 10, 20);
+                        
+                        // Calcular dimensiones para la imagen
+                        const imgWidth = pageWidth - 20;
+                        const imgHeight = (img.height * imgWidth) / img.width;
+                        
+                        // Asegurarse de que la imagen no sea más alta que la página
+                        let finalImgHeight = imgHeight;
+                        let finalImgWidth = imgWidth;
+                        
+                        if (imgHeight > pageHeight - 40) {
+                            finalImgHeight = pageHeight - 40;
+                            finalImgWidth = (img.width * finalImgHeight) / img.height;
+                        }
+                        
+                        // Centrar la imagen horizontalmente
+                        const xOffset = (pageWidth - finalImgWidth) / 2;
+                        
+                        // Añadir la imagen
+                        pdf.addImage(imgData.src, 'PNG', xOffset, 30, finalImgWidth, finalImgHeight);
+                    }
+                }
+                
+                // Obtener el CUIT para el nombre del archivo
+                const cuit = document.getElementById('titular_cuit').value || 'formulario';
+                
+                return {
+                    pdf: pdf,
+                    fileName: `Declaracion_Jurada_OSPETAX_${cuit}.pdf`
+                };
+                
+            } catch (error) {
+                console.error('Error al generar el PDF:', error);
+                throw error;
+            } finally {
+                // Ocultar indicador de carga
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        }
+        
+        // Guardar datos en Google Sheets
+        async function saveToGoogleSheets(formData) {
+            try {
+                // Verificar si el usuario está autenticado
+                if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                    await gapi.auth2.getAuthInstance().signIn();
+                }
+                
+                // Preparar los datos para Google Sheets
+                const values = [
+                    [
+                        formData.get('titular_nombre'),
+                        formData.get('titular_cuit'),
+                        formData.get('titular_fecha_nac'),
+                        formData.get('titular_edad'),
+                        formData.get('titular_email'),
+                        formData.get('domicilio'),
+                        formData.get('provincia'),
+                        formData.get('celular'),
+                        new Date().toISOString() // Fecha de envío
+                    ]
+                ];
+                
+                // Enviar datos a Google Sheets
+                const response = await gapi.client.sheets.spreadsheets.values.append({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: 'Formularios!A2:I', // Ajustar según la estructura de tu hoja
+                    valueInputOption: 'USER_ENTERED',
+                    resource: {
+                        values: values
+                    }
+                });
+                
+                console.log('Datos guardados en Google Sheets:', response);
+                return response;
+                
+            } catch (error) {
+                console.error('Error al guardar en Google Sheets:', error);
+                throw error;
+            }
+        }
+        
+        // Guardar PDF en Google Drive
+        async function savePDFToDrive(pdfData) {
+            try {
+                // Verificar si el usuario está autenticado
+                if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                    await gapi.auth2.getAuthInstance().signIn();
                 }
                 
                 // Convertir el PDF a Blob
-                return pdf.output('blob');
+                const pdfBlob = pdfData.pdf.output('blob');
+                
+                // Crear un objeto File a partir del Blob
+                const file = new File([pdfBlob], pdfData.fileName, { type: 'application/pdf' });
+                
+                // Crear un objeto FormData para la carga
+                const metadata = {
+                    name: pdfData.fileName,
+                    mimeType: 'application/pdf',
+                    parents: [DRIVE_FOLDER_ID] // ID de la carpeta en Google Drive
+                };
+                
+                const form = new FormData();
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', file);
+                
+                // Obtener el token de acceso
+                const accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+                
+                // Subir el archivo a Google Drive
+                const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    },
+                    body: form
+                });
+                
+                const result = await response.json();
+                console.log('PDF guardado en Google Drive:', result);
+                
+                return result;
+                
             } catch (error) {
-                console.error('Error al generar el PDF:', error);
+                console.error('Error al guardar PDF en Google Drive:', error);
                 throw error;
             }
         }
@@ -2029,23 +2400,30 @@
             
             // Mostrar indicador de carga
             document.getElementById('loadingIndicator').style.display = 'flex';
-            document.getElementById('loadingText').textContent = 'Enviando formulario y guardando en Google Drive...';
+            document.getElementById('loadingText').textContent = 'Procesando formulario, por favor espere...';
             
             try {
-                // Guardar en Google Drive si está disponible
-                if (googleDriveAccessToken) {
-                    await savePDFToGoogleDrive();
-                }
+                // Obtener los datos del formulario
+                const formData = new FormData(document.getElementById('healthForm'));
                 
-                // Aquí se podría implementar el envío de datos al servidor
-                // Por ahora, solo mostramos el mensaje de éxito
+                // Generar el PDF
+                const pdfData = await generatePDF();
+                
+                // Guardar datos en Google Sheets
+                await saveToGoogleSheets(formData);
+                
+                // Guardar PDF en Google Drive
+                await savePDFToDrive(pdfData);
+                
+                // Mostrar mensaje de éxito
                 document.getElementById('healthForm').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
                 
                 // Scroll al mensaje
                 window.scrollTo(0, 0);
+                
             } catch (error) {
-                console.error('Error al enviar el formulario:', error);
+                console.error('Error al procesar el formulario:', error);
                 document.getElementById('errorMessage').style.display = 'block';
                 document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth' });
             } finally {
