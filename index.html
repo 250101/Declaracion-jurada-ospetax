@@ -4,265 +4,1197 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Declaración Jurada de Salud - OSPETAX</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; font-size: 12px; }
-        h1 { font-size: 16px; text-align: center; margin: 5px 0; }
-        h2 { font-size: 14px; text-align: center; text-decoration: underline; }
-        h3 { font-size: 12px; text-decoration: underline; }
-        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-        th, td { border: 1px solid #000; padding: 5px; font-size: 10px; min-width: 60px; }
-        th { background-color: #f2f2f2; }
-        input, textarea { 
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #f8f9fa;
+            --accent-color: #28a745;
+            --border-color: #dee2e6;
+            --text-color: #333;
+            --error-color: #dc3545;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body { 
+            font-family: 'Roboto', Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px;
+            color: var(--text-color);
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        h1 { 
+            font-size: 22px; 
+            text-align: center; 
+            margin: 10px 0;
+            color: var(--primary-color);
+        }
+        
+        h2 { 
+            font-size: 18px; 
+            text-align: center; 
+            margin: 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        h3 { 
+            font-size: 16px; 
+            margin: 15px 0 10px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+        
+        .card-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        table { 
+            border-collapse: collapse; 
             width: 100%; 
-            border: none; 
-            border-bottom: 1px solid #000; /* Subrayado negro por defecto */
-            font-size: 10px; 
-            overflow-x: auto; 
-            white-space: nowrap; 
-            background: transparent; 
-            padding-bottom: 2px; 
+            margin: 15px 0;
+            border-radius: 5px;
+            overflow: hidden;
         }
-        input:focus, textarea:focus { 
+        
+        th, td { 
+            border: 1px solid var(--border-color); 
+            padding: 10px; 
+            font-size: 14px;
+        }
+        
+        th { 
+            background-color: var(--primary-color); 
+            color: white;
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+        
+        input, textarea, select { 
+            width: 100%; 
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        input:focus, textarea:focus, select:focus { 
             outline: none; 
-            border-bottom: 2px solid #007bff; /* Subrayado azul al hacer foco */
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0,86,179,0.2);
         }
-        .inline-label { display: inline-block; margin-right: 10px; }
-        .section { margin-bottom: 15px; }
-        canvas { border: 1px solid #000; margin-top: 10px; touch-action: none; }
-        .success { color: green; display: none; text-align: center; }
-        .small-text { font-size: 10px; }
-        .header { display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-        .logo { width: 80px; height: auto; margin-right: 20px; border: 1px solid #ddd; padding: 5px; background: #fff; }
-        .header-text { text-align: center; }
-        @media (max-width: 600px) {
-            table { display: block; overflow-x: auto; }
-            .header { flex-direction: column; align-items: center; }
-            .logo { margin-right: 0; margin-bottom: 10px; }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .form-col {
+            flex: 1;
+            padding: 0 10px;
+            min-width: 200px;
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .required:after {
+            content: " *";
+            color: var(--error-color);
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .logo {
+            width: 100px;
+            height: auto;
+            margin-right: 30px;
+            border: 1px solid var(--border-color);
+            padding: 5px;
+            background: #fff;
+        }
+        
+        .header-text {
+            flex: 1;
+        }
+        
+        .header-text p {
+            margin: 3px 0;
+            font-size: 14px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background-color: #004494;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-4 {
+            margin-top: 20px;
+        }
+        
+        .mb-4 {
+            margin-bottom: 20px;
+        }
+        
+        .signature-container {
+            border: 1px dashed var(--border-color);
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f8f9fa;
+        }
+        
+        canvas {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+            margin-top: 10px;
+            touch-action: none;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            display: none;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .small-text {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .important-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        
+        .important-notice strong {
+            color: #856404;
+        }
+        
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            margin-top: 10px;
+            background-color: var(--secondary-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .file-upload-input {
+            display: none;
+        }
+        
+        .file-list {
+            margin-top: 10px;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        
+        .file-remove {
+            color: var(--error-color);
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: #f3f3f3;
+            z-index: 1000;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0;
+            transition: width 0.3s;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+        
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        
+        .step.active .step-number {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+        
+        .step-title {
+            font-size: 12px;
+            color: var(--text-color);
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .download-button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        /* Estilos para las previsualizaciones de imágenes */
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .modal-header {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 15px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .close-modal {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover,
+        .close-modal:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        /* Estilos para el indicador de carga */
+        #loadingIndicator {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .form-col {
+                flex: 0 0 100%;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .step-title {
+                display: none;
+            }
+            
+            .download-button-container {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .image-preview {
+                width: 100px;
+                height: 100px;
+            }
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+            
+            .btn, .file-upload, .signature-container button {
+                display: none;
+            }
+            
+            .form-navigation, .step-indicator {
+                display: none;
+            }
+            
+            .form-section {
+                display: block;
+            }
+            
+            .download-button-container {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://racais.com.ar/img/obrasSociales/ospetax.jpg" alt="Logo OSPETAX" class="logo">
-        <div class="header-text">
-            <h1>OBRA SOCIAL DE PEONES DE TAXI DE LA CAPITAL FEDERAL</h1>
-            <p>RNOS 1-2370-1</p>
-            <p>Av. La Plata N° 1562/64</p>
-            <p>Teléfonos: 011-4920-7000/7099</p>
-            <p>CP: C1250AAS</p>
-            <p>Ciudad Autónoma de Buenos Aires</p>
-            <p>www.ospetax.org.ar</p>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Botón flotante para descargar PDF en cualquier momento -->
+    <div class="download-button-container">
+        <button type="button" class="btn btn-success" onclick="downloadPDF()">
+            Descargar PDF
+        </button>
+    </div>
+
+    <!-- Indicador de carga -->
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px;">Generando PDF, por favor espere...</p>
+    </div>
+
+    <div class="container" id="formContainer">
+        <div class="header">
+            <img src="https://racais.com.ar/img/obrasSociales/ospetax.jpg" alt="Logo OSPETAX" class="logo" id="logoOspetax" crossorigin="anonymous">
+            <div class="header-text">
+                <h1>OBRA SOCIAL DE PEONES DE TAXI DE LA CAPITAL FEDERAL</h1>
+                <p>RNOS 1-2370-1</p>
+                <p>Av. La Plata N° 1562/64</p>
+                <p>Teléfonos: 011-4920-7000/7099</p>
+                <p>CP: C1250AAS</p>
+                <p>Ciudad Autónoma de Buenos Aires</p>
+                <p>www.ospetax.org.ar</p>
+            </div>
+        </div>
+
+        <h2>DECLARACIÓN JURADA DE SALUD</h2>
+
+        <div class="step-indicator">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-title">Datos Personales</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-title">Información de Salud</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-title">Grupo Familiar</div>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-title">Documentación</div>
+            </div>
+            <div class="step" data-step="5">
+                <div class="step-number">5</div>
+                <div class="step-title">Confirmación</div>
+            </div>
+        </div>
+
+        <form id="healthForm" onsubmit="submitForm(event)">
+            <!-- Sección 1: Datos Personales -->
+            <div class="form-section active" id="section1">
+                <div class="card">
+                    <div class="card-header">Datos del Titular</div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="titular_nombre" class="required">Apellido y Nombre del Titular</label>
+                            <input type="text" id="titular_nombre" name="titular_nombre">
+                        </div>
+                        <div class="form-col">
+                            <label for="titular_cuit" class="required">CUIT</label>
+                            <input type="text" id="titular_cuit" name="titular_cuit" placeholder="XX-XXXXXXXX-X">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="opcion_numero">Opción N°</label>
+                            <input type="number" id="opcion_numero" name="opcion_numero">
+                        </div>
+                        <div class="form-col">
+                            <label for="titular_fecha_nac" class="required">Fecha de Nacimiento</label>
+                            <input type="date" id="titular_fecha_nac" name="titular_fecha_nac">
+                        </div>
+                        <div class="form-col">
+                            <label for="titular_edad" class="required">Edad</label>
+                            <input type="number" id="titular_edad" name="titular_edad">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="titular_email" class="required">Email</label>
+                            <input type="email" id="titular_email" name="titular_email">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Domicilio</div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="domicilio">Domicilio Real</label>
+                            <input type="text" id="domicilio" name="domicilio">
+                        </div>
+                        <div class="form-col">
+                            <label for="domicilio_numero">N°</label>
+                            <input type="number" id="domicilio_numero" name="domicilio_numero">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="piso">Piso</label>
+                            <input type="text" id="piso" name="piso">
+                        </div>
+                        <div class="form-col">
+                            <label for="dto">Dto</label>
+                            <input type="text" id="dto" name="dto">
+                        </div>
+                        <div class="form-col">
+                            <label for="barrio">Barrio</label>
+                            <input type="text" id="barrio" name="barrio">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="partido">Partido</label>
+                            <input type="text" id="partido" name="partido">
+                        </div>
+                        <div class="form-col">
+                            <label for="cod_postal">Código Postal</label>
+                            <input type="text" id="cod_postal" name="cod_postal">
+                        </div>
+                        <div class="form-col">
+                            <label for="provincia">Provincia</label>
+                            <input type="text" id="provincia" name="provincia">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Información de Contacto</div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono">
+                        </div>
+                        <div class="form-col">
+                            <label for="celular">Celular</label>
+                            <input type="tel" id="celular" name="celular">
+                        </div>
+                        <div class="form-col">
+                            <label for="email_contacto">E-mail</label>
+                            <input type="email" id="email_contacto" name="email_contacto">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Contacto de Emergencia</div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="contacto_nombre">Apellido y Nombres</label>
+                            <input type="text" id="contacto_nombre" name="contacto_nombre">
+                        </div>
+                        <div class="form-col">
+                            <label for="contacto_relacion">Relación</label>
+                            <input type="text" id="contacto_relacion" name="contacto_relacion">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="contacto_celular">Celular</label>
+                            <input type="tel" id="contacto_celular" name="contacto_celular">
+                        </div>
+                        <div class="form-col">
+                            <label for="contacto_domicilio">Domicilio</label>
+                            <input type="text" id="contacto_domicilio" name="contacto_domicilio">
+                        </div>
+                        <div class="form-col">
+                            <label for="contacto_numero">N°</label>
+                            <input type="number" id="contacto_numero" name="contacto_numero">
+                        </div>
+                        <div class="form-col">
+                            <label for="contacto_barrio">Barrio</label>
+                            <input type="text" id="contacto_barrio" name="contacto_barrio">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <div></div>
+                    <button type="button" class="btn" onclick="nextSection(1)">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Sección 2: Información de Salud -->
+            <div class="form-section" id="section2">
+                <div class="card">
+                    <div class="card-header">Información de Salud del Grupo Familiar</div>
+                    <p class="mb-4">Complete todos los datos del grupo familiar que van a ingresar a la cobertura del titular</p>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Detalle</th>
+                                    <th>Titular</th>
+                                    <th>Esposa/o</th>
+                                    <th>Hijo</th>
+                                    <th>Hijo</th>
+                                    <th>Hijo</th>
+                                    <th>Hijo</th>
+                                    <th>Hijo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Edad</td>
+                                    <td><input type="number" name="edad_titular"></td>
+                                    <td><input type="number" name="edad_esposa"></td>
+                                    <td><input type="number" name="edad_hijo1"></td>
+                                    <td><input type="number" name="edad_hijo2"></td>
+                                    <td><input type="number" name="edad_hijo3"></td>
+                                    <td><input type="number" name="edad_hijo4"></td>
+                                    <td><input type="number" name="edad_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Peso</td>
+                                    <td><input type="number" name="peso_titular"></td>
+                                    <td><input type="number" name="peso_esposa"></td>
+                                    <td><input type="number" name="peso_hijo1"></td>
+                                    <td><input type="number" name="peso_hijo2"></td>
+                                    <td><input type="number" name="peso_hijo3"></td>
+                                    <td><input type="number" name="peso_hijo4"></td>
+                                    <td><input type="number" name="peso_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Altura</td>
+                                    <td><input type="number" name="altura_titular"></td>
+                                    <td><input type="number" name="altura_esposa"></td>
+                                    <td><input type="number" name="altura_hijo1"></td>
+                                    <td><input type="number" name="altura_hijo2"></td>
+                                    <td><input type="number" name="altura_hijo3"></td>
+                                    <td><input type="number" name="altura_hijo4"></td>
+                                    <td><input type="number" name="altura_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Fuma / Ctos</td>
+                                    <td><input type="text" name="fuma_titular"></td>
+                                    <td><input type="text" name="fuma_esposa"></td>
+                                    <td><input type="text" name="fuma_hijo1"></td>
+                                    <td><input type="text" name="fuma_hijo2"></td>
+                                    <td><input type="text" name="fuma_hijo3"></td>
+                                    <td><input type="text" name="fuma_hijo4"></td>
+                                    <td><input type="text" name="fuma_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Cirugías realizadas anteriores - Detallar</td>
+                                    <td><input type="text" name="cirugias_ant_titular"></td>
+                                    <td><input type="text" name="cirugias_ant_esposa"></td>
+                                    <td><input type="text" name="cirugias_ant_hijo1"></td>
+                                    <td><input type="text" name="cirugias_ant_hijo2"></td>
+                                    <td><input type="text" name="cirugias_ant_hijo3"></td>
+                                    <td><input type="text" name="cirugias_ant_hijo4"></td>
+                                    <td><input type="text" name="cirugias_ant_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Cirugías pendientes que tiene que realizar - Detallar</td>
+                                    <td><input type="text" name="cirugias_pen_titular"></td>
+                                    <td><input type="text" name="cirugias_pen_esposa"></td>
+                                    <td><input type="text" name="cirugias_pen_hijo1"></td>
+                                    <td><input type="text" name="cirugias_pen_hijo2"></td>
+                                    <td><input type="text" name="cirugias_pen_hijo3"></td>
+                                    <td><input type="text" name="cirugias_pen_hijo4"></td>
+                                    <td><input type="text" name="cirugias_pen_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Tratamientos pendientes a realizar - Detallar</td>
+                                    <td><input type="text" name="trat_pen_titular"></td>
+                                    <td><input type="text" name="trat_pen_esposa"></td>
+                                    <td><input type="text" name="trat_pen_hijo1"></td>
+                                    <td><input type="text" name="trat_pen_hijo2"></td>
+                                    <td><input type="text" name="trat_pen_hijo3"></td>
+                                    <td><input type="text" name="trat_pen_hijo4"></td>
+                                    <td><input type="text" name="trat_pen_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Tiene alguna prótesis colocadas - Detallar</td>
+                                    <td><input type="text" name="protesis_titular"></td>
+                                    <td><input type="text" name="protesis_esposa"></td>
+                                    <td><input type="text" name="protesis_hijo1"></td>
+                                    <td><input type="text" name="protesis_hijo2"></td>
+                                    <td><input type="text" name="protesis_hijo3"></td>
+                                    <td><input type="text" name="protesis_hijo4"></td>
+                                    <td><input type="text" name="protesis_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Está o necesita tratamiento psicológico</td>
+                                    <td><input type="text" name="psico_titular"></td>
+                                    <td><input type="text" name="psico_esposa"></td>
+                                    <td><input type="text" name="psico_hijo1"></td>
+                                    <td><input type="text" name="psico_hijo2"></td>
+                                    <td><input type="text" name="psico_hijo3"></td>
+                                    <td><input type="text" name="psico_hijo4"></td>
+                                    <td><input type="text" name="psico_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Está o necesita tratamiento nutricional</td>
+                                    <td><input type="text" name="nutri_titular"></td>
+                                    <td><input type="text" name="nutri_esposa"></td>
+                                    <td><input type="text" name="nutri_hijo1"></td>
+                                    <td><input type="text" name="nutri_hijo2"></td>
+                                    <td><input type="text" name="nutri_hijo3"></td>
+                                    <td><input type="text" name="nutri_hijo4"></td>
+                                    <td><input type="text" name="nutri_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Está o necesita tratamiento pedagógico</td>
+                                    <td><input type="text" name="peda_titular"></td>
+                                    <td><input type="text" name="peda_esposa"></td>
+                                    <td><input type="text" name="peda_hijo1"></td>
+                                    <td><input type="text" name="peda_hijo2"></td>
+                                    <td><input type="text" name="peda_hijo3"></td>
+                                    <td><input type="text" name="peda_hijo4"></td>
+                                    <td><input type="text" name="peda_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Está o necesita tratamiento oftalmológico</td>
+                                    <td><input type="text" name="oftalmo_titular"></td>
+                                    <td><input type="text" name="oftalmo_esposa"></td>
+                                    <td><input type="text" name="oftalmo_hijo1"></td>
+                                    <td><input type="text" name="oftalmo_hijo2"></td>
+                                    <td><input type="text" name="oftalmo_hijo3"></td>
+                                    <td><input type="text" name="oftalmo_hijo4"></td>
+                                    <td><input type="text" name="oftalmo_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Está o necesita tratamiento odontológico</td>
+                                    <td><input type="text" name="odonto_titular"></td>
+                                    <td><input type="text" name="odonto_esposa"></td>
+                                    <td><input type="text" name="odonto_hijo1"></td>
+                                    <td><input type="text" name="odonto_hijo2"></td>
+                                    <td><input type="text" name="odonto_hijo3"></td>
+                                    <td><input type="text" name="odonto_hijo4"></td>
+                                    <td><input type="text" name="odonto_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Está tomando alguna medicación crónica - Detallar</td>
+                                    <td><input type="text" name="med_cronica_titular"></td>
+                                    <td><input type="text" name="med_cronica_esposa"></td>
+                                    <td><input type="text" name="med_cronica_hijo1"></td>
+                                    <td><input type="text" name="med_cronica_hijo2"></td>
+                                    <td><input type="text" name="med_cronica_hijo3"></td>
+                                    <td><input type="text" name="med_cronica_hijo4"></td>
+                                    <td><input type="text" name="med_cronica_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Es alérgico a algún medicamento - Detallar</td>
+                                    <td><input type="text" name="alergia_titular"></td>
+                                    <td><input type="text" name="alergia_esposa"></td>
+                                    <td><input type="text" name="alergia_hijo1"></td>
+                                    <td><input type="text" name="alergia_hijo2"></td>
+                                    <td><input type="text" name="alergia_hijo3"></td>
+                                    <td><input type="text" name="alergia_hijo4"></td>
+                                    <td><input type="text" name="alergia_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Tiene problemas de varices</td>
+                                    <td><input type="text" name="varices_titular"></td>
+                                    <td><input type="text" name="varices_esposa"></td>
+                                    <td><input type="text" name="varices_hijo1"></td>
+                                    <td><input type="text" name="varices_hijo2"></td>
+                                    <td><input type="text" name="varices_hijo3"></td>
+                                    <td><input type="text" name="varices_hijo4"></td>
+                                    <td><input type="text" name="varices_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Tuvo o tiene presión alta</td>
+                                    <td><input type="text" name="presion_titular"></td>
+                                    <td><input type="text" name="presion_esposa"></td>
+                                    <td><input type="text" name="presion_hijo1"></td>
+                                    <td><input type="text" name="presion_hijo2"></td>
+                                    <td><input type="text" name="presion_hijo3"></td>
+                                    <td><input type="text" name="presion_hijo4"></td>
+                                    <td><input type="text" name="presion_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Tuvo o tiene diabetes</td>
+                                    <td><input type="text" name="diabetes_titular"></td>
+                                    <td><input type="text" name="diabetes_esposa"></td>
+                                    <td><input type="text" name="diabetes_hijo1"></td>
+                                    <td><input type="text" name="diabetes_hijo2"></td>
+                                    <td><input type="text" name="diabetes_hijo3"></td>
+                                    <td><input type="text" name="diabetes_hijo4"></td>
+                                    <td><input type="text" name="diabetes_hijo5"></td>
+                                </tr>
+                                <tr>
+                                    <td>Está embarazada (Si lo está, especifique de cuantos meses en observaciones)</td>
+                                    <td><input type="text" name="embarazo_titular"></td>
+                                    <td><input type="text" name="embarazo_esposa"></td>
+                                    <td><input type="text" name="embarazo_hijo1"></td>
+                                    <td><input type="text" name="embarazo_hijo2"></td>
+                                    <td><input type="text" name="embarazo_hijo3"></td>
+                                    <td><input type="text" name="embarazo_hijo4"></td>
+                                    <td><input type="text" name="embarazo_hijo5"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Observaciones</div>
+                    <div class="form-group">
+                        <label for="observaciones">Detallar y agregar alguna otra condición que no esté mencionada dentro de esta declaración jurada:</label>
+                        <textarea name="observaciones" id="observaciones" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection(2)">Anterior</button>
+                    <button type="button" class="btn" onclick="nextSection(2)">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Sección 3: Grupo Familiar -->
+            <div class="form-section" id="section3">
+                <div class="card">
+                    <div class="card-header">Grupo Familiar</div>
+                    <p class="mb-4">Complete los datos de los integrantes del grupo familiar</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Apellido y Nombres</th>
+                                <th>Parentesco</th>
+                                <th>Documento</th>
+                                <th>Fecha de Nacimiento</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" name="gf_nombre1"></td>
+                                <td><input type="text" name="gf_parentesco1"></td>
+                                <td><input type="text" name="gf_documento1"></td>
+                                <td><input type="date" name="gf_fecha_nac1"></td>
+                                <td><input type="text" name="gf_observ1"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="gf_nombre2"></td>
+                                <td><input type="text" name="gf_parentesco2"></td>
+                                <td><input type="text" name="gf_documento2"></td>
+                                <td><input type="date" name="gf_fecha_nac2"></td>
+                                <td><input type="text" name="gf_observ2"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="gf_nombre3"></td>
+                                <td><input type="text" name="gf_parentesco3"></td>
+                                <td><input type="text" name="gf_documento3"></td>
+                                <td><input type="date" name="gf_fecha_nac3"></td>
+                                <td><input type="text" name="gf_observ3"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="gf_nombre4"></td>
+                                <td><input type="text" name="gf_parentesco4"></td>
+                                <td><input type="text" name="gf_documento4"></td>
+                                <td><input type="date" name="gf_fecha_nac4"></td>
+                                <td><input type="text" name="gf_observ4"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="gf_nombre5"></td>
+                                <td><input type="text" name="gf_parentesco5"></td>
+                                <td><input type="text" name="gf_documento5"></td>
+                                <td><input type="date" name="gf_fecha_nac5"></td>
+                                <td><input type="text" name="gf_observ5"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="gf_nombre6"></td>
+                                <td><input type="text" name="gf_parentesco6"></td>
+                                <td><input type="text" name="gf_documento6"></td>
+                                <td><input type="date" name="gf_fecha_nac6"></td>
+                                <td><input type="text" name="gf_observ6"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="gf_nombre7"></td>
+                                <td><input type="text" name="gf_parentesco7"></td>
+                                <td><input type="text" name="gf_documento7"></td>
+                                <td><input type="date" name="gf_fecha_nac7"></td>
+                                <td><input type="text" name="gf_observ7"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection(3)">Anterior</button>
+                    <button type="button" class="btn" onclick="nextSection(3)">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Sección 4: Documentación -->
+            <div class="form-section" id="section4">
+                <div class="card">
+                    <div class="card-header">Documentación</div>
+                    
+                    <div class="form-group">
+                        <label>Adjuntar Documentación</label>
+                        <div class="file-upload" id="fileUploadArea">
+                            <p>Haga clic aquí o arrastre los archivos para adjuntar</p>
+                            <p class="small-text">Formatos aceptados: JPG, PNG, PDF</p>
+                            <input type="file" name="documentos" id="documentos" class="file-upload-input" multiple accept="image/*,application/pdf">
+                        </div>
+                        <ul class="file-list" id="fileList"></ul>
+                        
+                        <!-- Contenedor para mostrar las previsualizaciones de imágenes -->
+                        <div class="image-preview-container" id="imagePreviewContainer"></div>
+                    </div>
+                    
+                    <div class="important-notice">
+                        <strong>IMPORTANTE:</strong><br>
+                        SE DEJA EXPRESAMENTE ACLARADO QUE EL GRUPO FAMILIAR DEL AFILIADO PARA OBTENER LA COBERTURA DE LA OBRA SOCIAL DEBERÁ PRESENTAR TODA LA DOCUMENTACIÓN REQUERIDA.<br><br>
+                        <strong>DOCUMENTACIÓN A PRESENTAR:</strong><br>
+                        <strong>ESPOSA/O CÓNYUGE:</strong> CERTIFICADO DE CASAMIENTO EN EL CASO QUE ESTUVIERAN CASADOS LEGALMENTE. PARA CONVIVIENTE: CERTIFICADO DE CONCUBINATO CON DOS TESTIGOS NO MAYOR A 1 AÑO AL MOMENTO DE AFILIARSE. SI TUVIERA HIJOS QUE NO SON DEL TITULAR DEBERÁN DECLARARLOS EN EL CERTIFICADO DONDE DEBEN INFORMAR QUE ESTÁN A CARGO DEL TITULAR. FOTOCOPIA DE DOCUMENTO DE LOS DOS LADOS.<br>
+                        <strong>HIJOS:</strong> CERTIFICADO DE NACIMIENTO, FOTOCOPIA DEL DOCUMENTO DE LOS DOS LADOS. EN CASO DE SER MAYOR A 21 AÑOS EL ORIGINAL DEL CERTIFICADO DE ESTUDIOS EMITIDO POR EL CENTRO DE ESTUDIOS.
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection(4)">Anterior</button>
+                    <button type="button" class="btn" onclick="nextSection(4)">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Sección 5: Confirmación -->
+            <div class="form-section" id="section5">
+                <div class="card">
+                    <div class="card-header">Firma y Confirmación</div>
+                    
+                    <div class="form-group">
+                        <label for="signatureCanvas">Firma:</label>
+                        <div class="signature-container">
+                            <canvas id="signatureCanvas" width="400" height="150"></canvas>
+                            <input type="hidden" name="firma" id="firmaInput">
+                            <button type="button" class="btn btn-secondary mt-4" onclick="clearSignature()">Borrar Firma</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="aclaracion">Aclaración:</label>
+                            <input type="text" id="aclaracion" name="aclaracion">
+                        </div>
+                        <div class="form-col">
+                            <label for="documento">Documento:</label>
+                            <input type="text" id="documento" name="documento">
+                        </div>
+                        <div class="form-col">
+                            <label for="fecha">Fecha:</label>
+                            <input type="date" id="fecha" name="fecha">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection(5)">Anterior</button>
+                    <button type="submit" class="btn">Enviar Formulario</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            <h3>¡Formulario enviado con éxito!</h3>
+            <p>El formulario se ha completado correctamente. Para acceder a la credencial deberá comunicarse con la casilla de <strong>afiliaciones@conexionsalud.com.ar</strong></p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <h3>Error al enviar el formulario</h3>
+            <p>Por favor, verifique los datos ingresados e intente nuevamente.</p>
+        </div>
+
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Confirmación</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro que desea descargar el formulario en PDF?</p>
+                    <p class="small-text">Tenga en cuenta que el PDF incluirá todos los datos ingresados hasta el momento.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelDownload">Cancelar</button>
+                    <button type="button" class="btn" id="confirmDownload">Descargar PDF</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <h2>DECLARACIÓN JURADA DE SALUD</h2>
-
-    <form id="healthForm" onsubmit="submitForm(event)">
-        <div class="section">
-            <label class="inline-label"><strong>APELLIDO Y NOMBRE DEL TITULAR:</strong> <input type="text" name="titular_nombre" inputmode="text" required></label>
-            <label class="inline-label"><strong>CUIT:</strong> <input type="text" name="titular_cuit" inputmode="numeric" required></label><br>
-            <label class="inline-label"><strong>OPCIÓN N°:</strong> <input type="number" name="opcion_numero"></label>
-            <label class="inline-label"><strong>FECHA NAC:</strong> <input type="date" name="titular_fecha_nac" required></label>
-            <label class="inline-label"><strong>EDAD:</strong> <input type="number" name="titular_edad" required></label>
-            <label class="inline-label"><strong>MAIL:</strong> <input type="email" name="titular_email" required></label>
-        </div>
-
-        <div class="section">
-            <h3>COMPLETAR TODOS LOS DATOS DEL GRUPO FAMILIAR QUE VAN A INGRESAR A LA COBERTURA DEL TITULAR</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>DETALLE</th>
-                        <th>TITULAR</th>
-                        <th>ESPOSA/O</th>
-                        <th>HIJO</th>
-                        <th>HIJO</th>
-                        <th>HIJO</th>
-                        <th>HIJO</th>
-                        <th>HIJO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>EDAD</td><td><input type="number" name="edad_titular"></td><td><input type="number" name="edad_esposa"></td><td><input type="number" name="edad_hijo1"></td><td><input type="number" name="edad_hijo2"></td><td><input type="number" name="edad_hijo3"></td><td><input type="number" name="edad_hijo4"></td><td><input type="number" name="edad_hijo5"></td></tr>
-                    <tr><td>PESO</td><td><input type="number" name="peso_titular"></td><td><input type="number" name="peso_esposa"></td><td><input type="number" name="peso_hijo1"></td><td><input type="number" name="peso_hijo2"></td><td><input type="number" name="peso_hijo3"></td><td><input type="number" name="peso_hijo4"></td><td><input type="number" name="peso_hijo5"></td></tr>
-                    <tr><td>ALTURA</td><td><input type="number" name="altura_titular"></td><td><input type="number" name="altura_esposa"></td><td><input type="number" name="altura_hijo1"></td><td><input type="number" name="altura_hijo2"></td><td><input type="number" name="altura_hijo3"></td><td><input type="number" name="altura_hijo4"></td><td><input type="number" name="altura_hijo5"></td></tr>
-                    <tr><td>FUMA / CTOS</td><td><input type="text" name="fuma_titular" inputmode="text"></td><td><input type="text" name="fuma_esposa" inputmode="text"></td><td><input type="text" name="fuma_hijo1" inputmode="text"></td><td><input type="text" name="fuma_hijo2" inputmode="text"></td><td><input type="text" name="fuma_hijo3" inputmode="text"></td><td><input type="text" name="fuma_hijo4" inputmode="text"></td><td><input type="text" name="fuma_hijo5" inputmode="text"></td></tr>
-                    <tr><td>CIRUGIAS REALIZADAS ANTERIORES - DETALLAR</td><td><input type="text" name="cirugias_ant_titular" inputmode="text"></td><td><input type="text" name="cirugias_ant_esposa" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo1" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo2" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo3" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo4" inputmode="text"></td><td><input type="text" name="cirugias_ant_hijo5" inputmode="text"></td></tr>
-                    <tr><td>CIRUGIAS PENDIENTES QUE TIENE QUE REALIZAR - DETALLAR</td><td><input type="text" name="cirugias_pen_titular" inputmode="text"></td><td><input type="text" name="cirugias_pen_esposa" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo1" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo2" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo3" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo4" inputmode="text"></td><td><input type="text" name="cirugias_pen_hijo5" inputmode="text"></td></tr>
-                    <tr><td>TRATAMIENTOS PENDIENTES A REALIZAR - DETALLAR</td><td><input type="text" name="trat_pen_titular" inputmode="text"></td><td><input type="text" name="trat_pen_esposa" inputmode="text"></td><td><input type="text" name="trat_pen_hijo1" inputmode="text"></td><td><input type="text" name="trat_pen_hijo2" inputmode="text"></td><td><input type="text" name="trat_pen_hijo3" inputmode="text"></td><td><input type="text" name="trat_pen_hijo4" inputmode="text"></td><td><input type="text" name="trat_pen_hijo5" inputmode="text"></td></tr>
-                    <tr><td>TIENE ALGUNA PROTESIS COLOCADAS - DETALLAR</td><td><input type="text" name="protesis_titular" inputmode="text"></td><td><input type="text" name="protesis_esposa" inputmode="text"></td><td><input type="text" name="protesis_hijo1" inputmode="text"></td><td><input type="text" name="protesis_hijo2" inputmode="text"></td><td><input type="text" name="protesis_hijo3" inputmode="text"></td><td><input type="text" name="protesis_hijo4" inputmode="text"></td><td><input type="text" name="protesis_hijo5" inputmode="text"></td></tr>
-                    <tr><td>ESTA O NECESITA TRATAMIENTO PSICOLÓGICO</td><td><input type="text" name="psico_titular" inputmode="text"></td><td><input type="text" name="psico_esposa" inputmode="text"></td><td><input type="text" name="psico_hijo1" inputmode="text"></td><td><input type="text" name="psico_hijo2" inputmode="text"></td><td><input type="text" name="psico_hijo3" inputmode="text"></td><td><input type="text" name="psico_hijo4" inputmode="text"></td><td><input type="text" name="psico_hijo5" inputmode="text"></td></tr>
-                    <tr><td>ESTA O NECESITA TRATAMIENTO NUTRICIONAL</td><td><input type="text" name="nutri_titular" inputmode="text"></td><td><input type="text" name="nutri_esposa" inputmode="text"></td><td><input type="text" name="nutri_hijo1" inputmode="text"></td><td><input type="text" name="nutri_hijo2" inputmode="text"></td><td><input type="text" name="nutri_hijo3" inputmode="text"></td><td><input type="text" name="nutri_hijo4" inputmode="text"></td><td><input type="text" name="nutri_hijo5" inputmode="text"></td></tr>
-                    <tr><td>ESTA O NECESITA TRATAMIENTO PEDAGÓGICO</td><td><input type="text" name="peda_titular" inputmode="text"></td><td><input type="text" name="peda_esposa" inputmode="text"></td><td><input type="text" name="peda_hijo1" inputmode="text"></td><td><input type="text" name="peda_hijo2" inputmode="text"></td><td><input type="text" name="peda_hijo3" inputmode="text"></td><td><input type="text" name="peda_hijo4" inputmode="text"></td><td><input type="text" name="peda_hijo5" inputmode="text"></td></tr>
-                    <tr><td>ESTA O NECESITA TRATAMIENTO OFTALMOLÓGICO</td><td><input type="text" name="oftalmo_titular" inputmode="text"></td><td><input type="text" name="oftalmo_esposa" inputmode="text"></td><td><input type="text" name="oftalmo_hijo1" inputmode="text"></td><td><input type="text" name="oftalmo_hijo2" inputmode="text"></td><td><input type="text" name="oftalmo_hijo3" inputmode="text"></td><td><input type="text" name="oftalmo_hijo4" inputmode="text"></td><td><input type="text" name="oftalmo_hijo5" inputmode="text"></td></tr>
-                    <tr><td>ESTA O NECESITA TRATAMIENTO ODONTOLÓGICO</td><td><input type="text" name="odonto_titular" inputmode="text"></td><td><input type="text" name="odonto_esposa" inputmode="text"></td><td><input type="text" name="odonto_hijo1" inputmode="text"></td><td><input type="text" name="odonto_hijo2" inputmode="text"></td><td><input type="text" name="odonto_hijo3" inputmode="text"></td><td><input type="text" name="odonto_hijo4" inputmode="text"></td><td><input type="text" name="odonto_hijo5" inputmode="text"></td></tr>
-                    <tr><td>ESTA TOMANDO ALGUNA MEDICACIÓN CRÓNICA - DETALLAR</td><td><input type="text" name="med_cronica_titular" inputmode="text"></td><td><input type="text" name="med_cronica_esposa" inputmode="text"></td><td><input type="text" name="med_cronica_hijo1" inputmode="text"></td><td><input type="text" name="med_cronica_hijo2" inputmode="text"></td><td><input type="text" name="med_cronica_hijo3" inputmode="text"></td><td><input type="text" name="med_cronica_hijo4" inputmode="text"></td><td><input type="text" name="med_cronica_hijo5" inputmode="text"></td></tr>
-                    <tr><td>ES ALÉRGICO A ALGÚN MEDICAMENTO - DETALLAR</td><td><input type="text" name="alergia_titular" inputmode="text"></td><td><input type="text" name="alergia_esposa" inputmode="text"></td><td><input type="text" name="alergia_hijo1" inputmode="text"></td><td><input type="text" name="alergia_hijo2" inputmode="text"></td><td><input type="text" name="alergia_hijo3" inputmode="text"></td><td><input type="text" name="alergia_hijo4" inputmode="text"></td><td><input type="text" name="alergia_hijo5" inputmode="text"></td></tr>
-                    <tr><td>TIENE PROBLEMAS DE VARICES</td><td><input type="text" name="varices_titular" inputmode="text"></td><td><input type="text" name="varices_esposa" inputmode="text"></td><td><input type="text" name="varices_hijo1" inputmode="text"></td><td><input type="text" name="varices_hijo2" inputmode="text"></td><td><input type="text" name="varices_hijo3" inputmode="text"></td><td><input type="text" name="varices_hijo4" inputmode="text"></td><td><input type="text" name="varices_hijo5" inputmode="text"></td></tr>
-                    <tr><td>TUVO O TIENE PRESIÓN ALTA</td><td><input type="text" name="presion_titular" inputmode="text"></td><td><input type="text" name="presion_esposa" inputmode="text"></td><td><input type="text" name="presion_hijo1" inputmode="text"></td><td><input type="text" name="presion_hijo2" inputmode="text"></td><td><input type="text" name="presion_hijo3" inputmode="text"></td><td><input type="text" name="presion_hijo4" inputmode="text"></td><td><input type="text" name="presion_hijo5" inputmode="text"></td></tr>
-                    <tr><td>TUVO O TIENE DIABETES</td><td><input type="text" name="diabetes_titular" inputmode="text"></td><td><input type="text" name="diabetes_esposa" inputmode="text"></td><td><input type="text" name="diabetes_hijo1" inputmode="text"></td><td><input type="text" name="diabetes_hijo2" inputmode="text"></td><td><input type="text" name="diabetes_hijo3" inputmode="text"></td><td><input type="text" name="diabetes_hijo4" inputmode="text"></td><td><input type="text" name="diabetes_hijo5" inputmode="text"></td></tr>
-                    <tr><td>ESTA EMBARAZADA (SI LO ESTÁ, ESPECIFIQUE DE CUANTOS MESES EN OBSERVACIONES)</td><td><input type="text" name="embarazo_titular" inputmode="text"></td><td><input type="text" name="embarazo_esposa" inputmode="text"></td><td><input type="text" name="embarazo_hijo1" inputmode="text"></td><td><input type="text" name="embarazo_hijo2" inputmode="text"></td><td><input type="text" name="embarazo_hijo3" inputmode="text"></td><td><input type="text" name="embarazo_hijo4" inputmode="text"></td><td><input type="text" name="embarazo_hijo5" inputmode="text"></td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="section">
-            <h3>OBSERVACIONES, DETALLAR Y AGREGAR ALGUNA OTRA CONDICIÓN QUE NO ESTÉ MENCIONADA DENTRO DE ESTA DECLARACIÓN JURADA:</h3>
-            <textarea name="observaciones" rows="3" style="width: 100%;"></textarea>
-        </div>
-
-        <div class="section">
-            <label class="inline-label"><strong>DOMICILIO REAL:</strong> <input type="text" name="domicilio" inputmode="text"></label>
-            <label class="inline-label"><strong>N°:</strong> <input type="number" name="domicilio_numero"></label>
-            <label class="inline-label"><strong>PISO:</strong> <input type="text" name="piso" inputmode="text"></label>
-            <label class="inline-label"><strong>DTO:</strong> <input type="text" name="dto" inputmode="text"></label>
-            <label class="inline-label"><strong>BARRIO:</strong> <input type="text" name="barrio" inputmode="text"></label><br>
-            <label class="inline-label"><strong>PARTIDO:</strong> <input type="text" name="partido" inputmode="text"></label>
-            <label class="inline-label"><strong>COD. POSTAL:</strong> <input type="text" name="cod_postal" inputmode="numeric"></label>
-            <label class="inline-label"><strong>PROVINCIA:</strong> <input type="text" name="provincia" inputmode="text"></label>
-        </div>
-
-        <div class="section">
-            <label class="inline-label"><strong>TELÉFONO:</strong> <input type="tel" name="telefono"></label>
-            <label class="inline-label"><strong>CELULAR:</strong> <input type="tel" name="celular"></label>
-            <label class="inline-label"><strong>E-MAIL:</strong> <input type="email" name="email_contacto"></label>
-        </div>
-
-        <div class="section">
-            <h3>CONTACTO:</h3>
-            <label class="inline-label"><strong>APELLIDO Y NOMBRES:</strong> <input type="text" name="contacto_nombre" inputmode="text"></label>
-            <label class="inline-label"><strong>RELACIÓN:</strong> <input type="text" name="contacto_relacion" inputmode="text"></label><br>
-            <label class="inline-label"><strong>CELULAR:</strong> <input type="tel" name="contacto_celular"></label>
-            <label class="inline-label"><strong>DOMICILIO:</strong> <input type="text" name="contacto_domicilio" inputmode="text"></label>
-            <label class="inline-label"><strong>N°:</strong> <input type="number" name="contacto_numero"></label>
-            <label class="inline-label"><strong>BARRIO:</strong> <input type="text" name="contacto_barrio" inputmode="text"></label>
-        </div>
-
-        <div class="section">
-            <h3>ART (DEBERÁ RECTIFICAR LA ASEGURADORA CADA VEZ QUE EL EMPLEADOR CAMBIE DE PRESTADOR O QUE EL TRABAJADOR CAMBIE DE EMPLEADOR)</h3>
-        </div>
-
-        <div class="section">
-            <h3>Grupo Familiar:</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>APELLIDO Y NOMBRES</th>
-                        <th>PARENTESCO</th>
-                        <th>DOCUMENTO</th>
-                        <th>FECHA DE NACIMIENTO</th>
-                        <th>OBSERV.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td><input type="text" name="gf_nombre1" inputmode="text"></td><td><input type="text" name="gf_parentesco1" inputmode="text"></td><td><input type="text" name="gf_documento1" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac1"></td><td><input type="text" name="gf_observ1" inputmode="text"></td></tr>
-                    <tr><td><input type="text" name="gf_nombre2" inputmode="text"></td><td><input type="text" name="gf_parentesco2" inputmode="text"></td><td><input type="text" name="gf_documento2" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac2"></td><td><input type="text" name="gf_observ2" inputmode="text"></td></tr>
-                    <tr><td><input type="text" name="gf_nombre3" inputmode="text"></td><td><input type="text" name="gf_parentesco3" inputmode="text"></td><td><input type="text" name="gf_documento3" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac3"></td><td><input type="text" name="gf_observ3" inputmode="text"></td></tr>
-                    <tr><td><input type="text" name="gf_nombre4" inputmode="text"></td><td><input type="text" name="gf_parentesco4" inputmode="text"></td><td><input type="text" name="gf_documento4" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac4"></td><td><input type="text" name="gf_observ4" inputmode="text"></td></tr>
-                    <tr><td><input type="text" name="gf_nombre5" inputmode="text"></td><td><input type="text" name="gf_parentesco5" inputmode="text"></td><td><input type="text" name="gf_documento5" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac5"></td><td><input type="text" name="gf_observ5" inputmode="text"></td></tr>
-                    <tr><td><input type="text" name="gf_nombre6" inputmode="text"></td><td><input type="text" name="gf_parentesco6" inputmode="text"></td><td><input type="text" name="gf_documento6" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac6"></td><td><input type="text" name="gf_observ6" inputmode="text"></td></tr>
-                    <tr><td><input type="text" name="gf_nombre7" inputmode="text"></td><td><input type="text" name="gf_parentesco7" inputmode="text"></td><td><input type="text" name="gf_documento7" inputmode="numeric"></td><td><input type="date" name="gf_fecha_nac7"></td><td><input type="text" name="gf_observ7" inputmode="text"></td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="section">
-            <label class="inline-label"><strong>FIRMA:</strong> <input type="text" name="firma" style="display: none;" id="firmaInput"></label>
-            <canvas id="signatureCanvas" width="300" height="100"></canvas><br>
-            <button type="button" onclick="clearSignature()">Borrar Firma</button><br>
-            <label class="inline-label"><strong>ACLARACIÓN:</strong> <input type="text" name="aclaracion" inputmode="text"></label>
-            <label class="inline-label"><strong>DOCUMENTO:</strong> <input type="text" name="documento" inputmode="numeric"></label>
-            <label class="inline-label"><strong>FECHA:</strong> <input type="date" name="fecha"></label>
-        </div>
-
-        <div class="section">
-            <h3>Adjuntar Documentación</h3>
-            <input type="file" name="documentos" multiple accept="image/*,application/pdf">
-        </div>
-
-        <div class="section small-text">
-            <strong>IMPORTANTE:</strong><br>
-            SE DEJA EXPRESAMENTE ACLARADO QUE EL GRUPO FAMILIAR DEL AFILIADO PARA OBTENER LA COBERTURA DE LA OBRA SOCIAL DEBERÁ PRESENTAR TODA LA DOCUMENTACIÓN REQUERIDA.<br><br>
-            <strong>DOCUMENTACIÓN A PRESENTAR:</strong><br>
-            <strong>ESPOSA/O CÓNYUGE:</strong> CERTIFICADO DE CASAMIENTO EN EL CASO QUE ESTUVIERAN CASADOS LEGALMENTE. PARA CONVIVIENTE: CERTIFICADO DE CONCUBINATO CON DOS TESTIGOS NO MAYOR A 1 AÑO AL MOMENTO DE AFILIARSE. SI TUVIERA HIJOS QUE NO SON DEL TITULAR DEBERÁN DECLARARLOS EN EL CERTIFICADO DONDE DEBEN INFORMAR QUE ESTÁN A CARGO DEL TITULAR. FOTOCOPIA DE DOCUMENTO DE LOS DOS LADOS.<br>
-            <strong>HIJOS:</strong> CERTIFICADO DE NACIMIENTO, FOTOCOPIA DEL DOCUMENTO DE LOS DOS LADOS. EN CASO DE SER MAYOR A 21 AÑOS EL ORIGINAL DEL CERTIFICADO DE ESTUDIOS EMITIDO POR EL CENTRO DE ESTUDIOS.
-        </div>
-
-        <button type="submit" style="display: block; margin: 20px auto;">Enviar</button>
-    </form>
-
-    <p class="success" id="successMessage">¡Formulario enviado con éxito!</p>
-
     <script>
+        // Variables globales
         const canvas = document.getElementById('signatureCanvas');
         const ctx = canvas.getContext('2d');
         let drawing = false;
-
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-        canvas.addEventListener('touchstart', startDrawing);
-        canvas.addEventListener('touchmove', draw);
-        canvas.addEventListener('touchend', stopDrawing);
-
-        function getPosition(e) {
-            const rect = canvas.getBoundingClientRect();
-            if (e.type.includes('touch')) {
-                return {
-                    x: e.touches[0].clientX - rect.left,
-                    y: e.touches[0].clientY - rect.top
-                };
-            } else {
-                return {
-                    x: e.clientX - rect.left,
-                    y: e.clientY - rect.top
-                };
-            }
-        }
-
-        function startDrawing(e) {
-            e.preventDefault();
-            drawing = true;
-            const pos = getPosition(e);
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        }
-
-        function draw(e) {
-            if (!drawing) return;
-            e.preventDefault();
-            const pos = getPosition(e);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-        }
-
-        function stopDrawing() {
-            drawing = false;
-            ctx.closePath();
-        }
-
-        function clearSignature() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function submitForm(event) {
-            event.preventDefault();
-            const formData = new FormData(document.getElementById('healthForm'));
-            formData.append('signature', canvas.toDataURL());
-
-            fetch('URL_DE_TU_SCRIPT', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('healthForm').reset();
-                clearSignature();
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'921dcc189af6c9a0',t:'MTc0MjIyODIxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+       
