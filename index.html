@@ -6,6 +6,8 @@
     <title>Declaración Jurada de Salud - OSPETAX</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -505,7 +507,6 @@
             height: 100%;
             background-color: rgba(255, 255, 255, 0.8);
             z-index: 2000;
-            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -523,6 +524,63 @@
         
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+        
+        /* Estilos para mensajes de validación */
+        .validation-error {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        input.invalid, textarea.invalid, select.invalid {
+            border-color: var(--error-color);
+        }
+        
+        /* Estilos para el botón de Google Drive */
+        .google-drive-button {
+            background-color: #4285F4;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+        }
+        
+        .google-drive-button:hover {
+            background-color: #3367D6;
+        }
+        
+        .google-drive-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .google-drive-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .google-drive-status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .google-drive-status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
         }
         
         @media (max-width: 768px) {
@@ -611,7 +669,7 @@
     <!-- Indicador de carga -->
     <div id="loadingIndicator" style="display: none;">
         <div class="spinner"></div>
-        <p style="margin-top: 15px;">Generando PDF, por favor espere...</p>
+        <p style="margin-top: 15px;" id="loadingText">Generando PDF, por favor espere...</p>
     </div>
 
     <div class="container" id="formContainer">
@@ -661,11 +719,13 @@
                     <div class="form-row">
                         <div class="form-col">
                             <label for="titular_nombre" class="required">Apellido y Nombre del Titular</label>
-                            <input type="text" id="titular_nombre" name="titular_nombre">
+                            <input type="text" id="titular_nombre" name="titular_nombre" required>
+                            <div class="validation-error" id="titular_nombre_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
                             <label for="titular_cuit" class="required">CUIT</label>
-                            <input type="text" id="titular_cuit" name="titular_cuit" placeholder="XX-XXXXXXXX-X">
+                            <input type="text" id="titular_cuit" name="titular_cuit" placeholder="XX-XXXXXXXX-X" required pattern="\d{2}-\d{8}-\d{1}">
+                            <div class="validation-error" id="titular_cuit_error">Ingrese un CUIT válido (XX-XXXXXXXX-X)</div>
                         </div>
                     </div>
                     <div class="form-row">
@@ -675,17 +735,19 @@
                         </div>
                         <div class="form-col">
                             <label for="titular_fecha_nac" class="required">Fecha de Nacimiento</label>
-                            <input type="date" id="titular_fecha_nac" name="titular_fecha_nac">
+                            <input type="date" id="titular_fecha_nac" name="titular_fecha_nac" required>
+                            <div class="validation-error" id="titular_fecha_nac_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
                             <label for="titular_edad" class="required">Edad</label>
-                            <input type="number" id="titular_edad" name="titular_edad">
+                            <input type="number" id="titular_edad" name="titular_edad" required readonly>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-col">
                             <label for="titular_email" class="required">Email</label>
-                            <input type="email" id="titular_email" name="titular_email">
+                            <input type="email" id="titular_email" name="titular_email" required>
+                            <div class="validation-error" id="titular_email_error">Ingrese un email válido</div>
                         </div>
                     </div>
                 </div>
@@ -694,12 +756,14 @@
                     <div class="card-header">Domicilio</div>
                     <div class="form-row">
                         <div class="form-col">
-                            <label for="domicilio">Domicilio Real</label>
-                            <input type="text" id="domicilio" name="domicilio">
+                            <label for="domicilio" class="required">Domicilio Real</label>
+                            <input type="text" id="domicilio" name="domicilio" required>
+                            <div class="validation-error" id="domicilio_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
-                            <label for="domicilio_numero">N°</label>
-                            <input type="number" id="domicilio_numero" name="domicilio_numero">
+                            <label for="domicilio_numero" class="required">N°</label>
+                            <input type="number" id="domicilio_numero" name="domicilio_numero" required>
+                            <div class="validation-error" id="domicilio_numero_error">Este campo es obligatorio</div>
                         </div>
                     </div>
                     <div class="form-row">
@@ -722,12 +786,14 @@
                             <input type="text" id="partido" name="partido">
                         </div>
                         <div class="form-col">
-                            <label for="cod_postal">Código Postal</label>
-                            <input type="text" id="cod_postal" name="cod_postal">
+                            <label for="cod_postal" class="required">Código Postal</label>
+                            <input type="text" id="cod_postal" name="cod_postal" required>
+                            <div class="validation-error" id="cod_postal_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
-                            <label for="provincia">Provincia</label>
-                            <input type="text" id="provincia" name="provincia">
+                            <label for="provincia" class="required">Provincia</label>
+                            <input type="text" id="provincia" name="provincia" required>
+                            <div class="validation-error" id="provincia_error">Este campo es obligatorio</div>
                         </div>
                     </div>
                 </div>
@@ -740,8 +806,9 @@
                             <input type="tel" id="telefono" name="telefono">
                         </div>
                         <div class="form-col">
-                            <label for="celular">Celular</label>
-                            <input type="tel" id="celular" name="celular">
+                            <label for="celular" class="required">Celular</label>
+                            <input type="tel" id="celular" name="celular" required>
+                            <div class="validation-error" id="celular_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
                             <label for="email_contacto">E-mail</label>
@@ -754,18 +821,21 @@
                     <div class="card-header">Contacto de Emergencia</div>
                     <div class="form-row">
                         <div class="form-col">
-                            <label for="contacto_nombre">Apellido y Nombres</label>
-                            <input type="text" id="contacto_nombre" name="contacto_nombre">
+                            <label for="contacto_nombre" class="required">Apellido y Nombres</label>
+                            <input type="text" id="contacto_nombre" name="contacto_nombre" required>
+                            <div class="validation-error" id="contacto_nombre_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
-                            <label for="contacto_relacion">Relación</label>
-                            <input type="text" id="contacto_relacion" name="contacto_relacion">
+                            <label for="contacto_relacion" class="required">Relación</label>
+                            <input type="text" id="contacto_relacion" name="contacto_relacion" required>
+                            <div class="validation-error" id="contacto_relacion_error">Este campo es obligatorio</div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-col">
-                            <label for="contacto_celular">Celular</label>
-                            <input type="tel" id="contacto_celular" name="contacto_celular">
+                            <label for="contacto_celular" class="required">Celular</label>
+                            <input type="tel" id="contacto_celular" name="contacto_celular" required>
+                            <div class="validation-error" id="contacto_celular_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
                             <label for="contacto_domicilio">Domicilio</label>
@@ -784,7 +854,7 @@
 
                 <div class="form-navigation">
                     <div></div>
-                    <button type="button" class="btn" onclick="nextSection(1)">Siguiente</button>
+                    <button type="button" class="btn" onclick="validateAndNext(1)">Siguiente</button>
                 </div>
             </div>
 
@@ -1014,7 +1084,7 @@
 
                 <div class="form-navigation">
                     <button type="button" class="btn btn-secondary" onclick="prevSection(2)">Anterior</button>
-                    <button type="button" class="btn" onclick="nextSection(2)">Siguiente</button>
+                    <button type="button" class="btn" onclick="validateAndNext(2)">Siguiente</button>
                 </div>
             </div>
 
@@ -1090,7 +1160,7 @@
 
                 <div class="form-navigation">
                     <button type="button" class="btn btn-secondary" onclick="prevSection(3)">Anterior</button>
-                    <button type="button" class="btn" onclick="nextSection(3)">Siguiente</button>
+                    <button type="button" class="btn" onclick="validateAndNext(3)">Siguiente</button>
                 </div>
             </div>
 
@@ -1123,7 +1193,7 @@
 
                 <div class="form-navigation">
                     <button type="button" class="btn btn-secondary" onclick="prevSection(4)">Anterior</button>
-                    <button type="button" class="btn" onclick="nextSection(4)">Siguiente</button>
+                    <button type="button" class="btn" onclick="validateAndNext(4)">Siguiente</button>
                 </div>
             </div>
 
@@ -1133,27 +1203,39 @@
                     <div class="card-header">Firma y Confirmación</div>
                     
                     <div class="form-group">
-                        <label for="signatureCanvas">Firma:</label>
+                        <label for="signatureCanvas" class="required">Firma:</label>
                         <div class="signature-container">
                             <canvas id="signatureCanvas" width="400" height="150"></canvas>
                             <input type="hidden" name="firma" id="firmaInput">
+                            <div class="validation-error" id="firma_error">La firma es obligatoria</div>
                             <button type="button" class="btn btn-secondary mt-4" onclick="clearSignature()">Borrar Firma</button>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-col">
-                            <label for="aclaracion">Aclaración:</label>
-                            <input type="text" id="aclaracion" name="aclaracion">
+                            <label for="aclaracion" class="required">Aclaración:</label>
+                            <input type="text" id="aclaracion" name="aclaracion" required>
+                            <div class="validation-error" id="aclaracion_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
-                            <label for="documento">Documento:</label>
-                            <input type="text" id="documento" name="documento">
+                            <label for="documento" class="required">Documento:</label>
+                            <input type="text" id="documento" name="documento" required>
+                            <div class="validation-error" id="documento_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
-                            <label for="fecha">Fecha:</label>
-                            <input type="date" id="fecha" name="fecha">
+                            <label for="fecha" class="required">Fecha:</label>
+                            <input type="date" id="fecha" name="fecha" required>
+                            <div class="validation-error" id="fecha_error">Este campo es obligatorio</div>
                         </div>
+                    </div>
+                    
+                    <div class="form-group mt-4">
+                        <div class="google-drive-button" id="saveToGoogleDrive">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/512px-Google_Drive_icon_%282020%29.svg.png" alt="Google Drive" class="google-drive-icon">
+                            <span>Guardar en Google Drive</span>
+                        </div>
+                        <div class="google-drive-status" id="googleDriveStatus"></div>
                     </div>
                 </div>
 
@@ -1166,7 +1248,8 @@
 
         <div class="success-message" id="successMessage">
             <h3>¡Formulario enviado con éxito!</h3>
-            <p>El formulario se ha completado correctamente. Para acceder a la credencial deberá comunicarse con la casilla de <strong>afiliaciones@conexionsalud.com.ar</strong></p>
+            <p>El formulario se ha completado correctamente y se ha guardado en Google Drive. Para acceder a la credencial deberá comunicarse con la casilla de <strong>afiliaciones@conexionsalud.com.ar</strong></p>
+            <button type="button" class="btn mt-4" onclick="downloadPDF()">Descargar PDF</button>
         </div>
 
         <div class="error-message" id="errorMessage">
@@ -1197,4 +1280,779 @@
         const canvas = document.getElementById('signatureCanvas');
         const ctx = canvas.getContext('2d');
         let drawing = false;
-       
+        let lastX = 0;
+        let lastY = 0;
+        let uploadedFiles = [];
+        let imagePreviewsForPDF = [];
+        let googleDriveAccessToken = null;
+        
+        // Configuración de Google Drive API
+        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // Reemplazar con tu Client ID
+        const API_KEY = 'YOUR_GOOGLE_API_KEY'; // Reemplazar con tu API Key
+        const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+        
+        // Configuración inicial
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSignatureCanvas();
+            setupFileUpload();
+            setupDateAutoFill();
+            setupGoogleDriveButton();
+            
+            // Establecer la fecha actual en el campo de fecha
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = today;
+            
+            // Precargar el logo para asegurar que esté disponible para el PDF
+            preloadLogo();
+        });
+        
+        // Configuración de Google Drive
+        function setupGoogleDriveButton() {
+            document.getElementById('saveToGoogleDrive').addEventListener('click', function() {
+                if (!googleDriveAccessToken) {
+                    initGoogleDriveAPI();
+                } else {
+                    savePDFToGoogleDrive();
+                }
+            });
+        }
+        
+        function initGoogleDriveAPI() {
+            gapi.load('client:auth2', () => {
+                gapi.client.init({
+                    apiKey: API_KEY,
+                    clientId: CLIENT_ID,
+                    discoveryDocs: DISCOVERY_DOCS,
+                    scope: SCOPES
+                }).then(() => {
+                    // Escuchar eventos de inicio de sesión
+                    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+                    
+                    // Manejar el estado de inicio de sesión inicial
+                    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+                    
+                    // Iniciar sesión si no está autenticado
+                    if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+                        gapi.auth2.getAuthInstance().signIn();
+                    }
+                }).catch(error => {
+                    console.error('Error al inicializar Google Drive API:', error);
+                    updateGoogleDriveStatus('Error al conectar con Google Drive. Por favor, intente nuevamente.', false);
+                });
+            });
+        }
+        
+        function updateSigninStatus(isSignedIn) {
+            if (isSignedIn) {
+                googleDriveAccessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+                updateGoogleDriveStatus('Conectado a Google Drive. Listo para guardar el formulario.', true);
+            } else {
+                googleDriveAccessToken = null;
+                updateGoogleDriveStatus('No conectado a Google Drive.', false);
+            }
+        }
+        
+        function updateGoogleDriveStatus(message, success) {
+            const statusElement = document.getElementById('googleDriveStatus');
+            statusElement.textContent = message;
+            statusElement.className = 'google-drive-status';
+            if (success) {
+                statusElement.classList.add('success');
+            } else {
+                statusElement.classList.add('error');
+            }
+        }
+        
+        async function savePDFToGoogleDrive() {
+            if (!googleDriveAccessToken) {
+                updateGoogleDriveStatus('No está conectado a Google Drive. Por favor, inicie sesión.', false);
+                return;
+            }
+            
+            try {
+                // Mostrar indicador de carga
+                document.getElementById('loadingIndicator').style.display = 'flex';
+                document.getElementById('loadingText').textContent = 'Guardando en Google Drive...';
+                
+                // Generar el PDF
+                const pdfBlob = await generatePDFBlob();
+                
+                // Obtener el CUIT para el nombre del archivo
+                const cuit = document.getElementById('titular_cuit').value || 'formulario';
+                const fileName = `Declaracion_Jurada_OSPETAX_${cuit}.pdf`;
+                
+                // Crear el archivo en Google Drive
+                const metadata = {
+                    name: fileName,
+                    mimeType: 'application/pdf',
+                };
+                
+                const form = new FormData();
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', pdfBlob);
+                
+                const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${googleDriveAccessToken}`,
+                    },
+                    body: form,
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error al guardar el archivo en Google Drive');
+                }
+                
+                const result = await response.json();
+                
+                // Actualizar el estado
+                updateGoogleDriveStatus(`Formulario guardado correctamente en Google Drive como "${fileName}"`, true);
+                
+                return result;
+            } catch (error) {
+                console.error('Error al guardar en Google Drive:', error);
+                updateGoogleDriveStatus('Error al guardar en Google Drive. Por favor, intente nuevamente.', false);
+                throw error;
+            } finally {
+                // Ocultar indicador de carga
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        }
+        
+        // Precargar el logo
+        function preloadLogo() {
+            const logoImg = document.getElementById('logoOspetax');
+            logoImg.onload = function() {
+                console.log('Logo cargado correctamente');
+            };
+            logoImg.onerror = function() {
+                console.error('Error al cargar el logo');
+            };
+        }
+        
+        // Configuración del canvas para firma
+        function setupSignatureCanvas() {
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000';
+            
+            // Eventos de mouse
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            // Eventos táctiles
+            canvas.addEventListener('touchstart', startDrawingTouch);
+            canvas.addEventListener('touchmove', drawTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+        
+        function getPosition(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        }
+        
+        function startDrawing(e) {
+            drawing = true;
+            const pos = getPosition(e);
+            lastX = pos.x;
+            lastY = pos.y;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+        }
+        
+        function draw(e) {
+            if (!drawing) return;
+            const pos = getPosition(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            lastX = pos.x;
+            lastY = pos.y;
+        }
+        
+        function startDrawingTouch(e) {
+            e.preventDefault();
+            drawing = true;
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            lastX = touch.clientX - rect.left;
+            lastY = touch.clientY - rect.top;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+        }
+        
+        function drawTouch(e) {
+            if (!drawing) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            lastX = x;
+            lastY = y;
+        }
+        
+        function stopDrawing() {
+            if (drawing) {
+                drawing = false;
+                ctx.closePath();
+                document.getElementById('firmaInput').value = canvas.toDataURL();
+                // Ocultar mensaje de error si hay firma
+                if (document.getElementById('firmaInput').value) {
+                    document.getElementById('firma_error').style.display = 'none';
+                }
+            }
+        }
+        
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('firmaInput').value = '';
+        }
+        
+        // Configuración de carga de archivos
+        function setupFileUpload() {
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInput = document.getElementById('documentos');
+            const fileList = document.getElementById('fileList');
+            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+            
+            fileUploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileUploadArea.classList.add('dragover');
+            });
+            
+            fileUploadArea.addEventListener('dragleave', function() {
+                fileUploadArea.classList.remove('dragover');
+            });
+            
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+            
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            function handleFiles(files) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file.type.match('image.*') || file.type === 'application/pdf') {
+                        uploadedFiles.push(file);
+                        
+                        const li = document.createElement('li');
+                        li.className = 'file-item';
+                        li.innerHTML = `
+                            <span>${file.name} (${formatFileSize(file.size)})</span>
+                            <span class="file-remove" data-index="${uploadedFiles.length - 1}">×</span>
+                        `;
+                        fileList.appendChild(li);
+                        
+                        // Si es una imagen, crear una previsualización
+                        if (file.type.match('image.*')) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const imgPreview = document.createElement('img');
+                                imgPreview.src = e.target.result;
+                                imgPreview.className = 'image-preview';
+                                imgPreview.dataset.index = uploadedFiles.length - 1;
+                                imagePreviewContainer.appendChild(imgPreview);
+                                
+                                // Guardar la imagen para el PDF
+                                imagePreviewsForPDF.push({
+                                    index: uploadedFiles.length - 1,
+                                    src: e.target.result,
+                                    name: file.name
+                                });
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                }
+                
+                // Agregar eventos para eliminar archivos
+                document.querySelectorAll('.file-remove').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        
+                        // Eliminar la previsualización si existe
+                        const preview = document.querySelector(`.image-preview[data-index="${index}"]`);
+                        if (preview) {
+                            preview.remove();
+                            
+                            // Eliminar de las imágenes para PDF
+                            const previewIndex = imagePreviewsForPDF.findIndex(img => img.index === index);
+                            if (previewIndex !== -1) {
+                                imagePreviewsForPDF.splice(previewIndex, 1);
+                            }
+                        }
+                        
+                        // Eliminar el archivo
+                        uploadedFiles.splice(index, 1);
+                        this.parentElement.remove();
+                        
+                        // Actualizar índices
+                        document.querySelectorAll('.file-remove').forEach((btn, idx) => {
+                            btn.setAttribute('data-index', idx);
+                        });
+                        
+                        document.querySelectorAll('.image-preview').forEach((img, idx) => {
+                            img.dataset.index = idx;
+                        });
+                        
+                        // Actualizar índices en imagePreviewsForPDF
+                        imagePreviewsForPDF.forEach((img, idx) => {
+                            img.index = idx;
+                        });
+                    });
+                });
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' bytes';
+                else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                else return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+        }
+        
+        // Auto-completar edad a partir de la fecha de nacimiento
+        function setupDateAutoFill() {
+            const fechaNacInput = document.getElementById('titular_fecha_nac');
+            const edadInput = document.getElementById('titular_edad');
+            
+            fechaNacInput.addEventListener('change', function() {
+                if (this.value) {
+                    const birthDate = new Date(this.value);
+                    const today = new Date();
+                    
+                    // Cálculo preciso de la edad
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    
+                    edadInput.value = age;
+                }
+            });
+        }
+        
+        // Validación de campos
+        function validateField(field) {
+            const errorElement = document.getElementById(`${field.id}_error`);
+            if (!errorElement) return true;
+            
+            let isValid = true;
+            
+            if (field.hasAttribute('required') && !field.value.trim()) {
+                errorElement.style.display = 'block';
+                field.classList.add('invalid');
+                isValid = false;
+            } else if (field.type === 'email' && field.value.trim() && !isValidEmail(field.value)) {
+                errorElement.style.display = 'block';
+                field.classList.add('invalid');
+                isValid = false;
+            } else if (field.hasAttribute('pattern') && field.value.trim() && !new RegExp(field.getAttribute('pattern')).test(field.value)) {
+                errorElement.style.display = 'block';
+                field.classList.add('invalid');
+                isValid = false;
+            } else {
+                errorElement.style.display = 'none';
+                field.classList.remove('invalid');
+            }
+            
+            return isValid;
+        }
+        
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function validateSection(sectionNumber) {
+            const section = document.getElementById(`section${sectionNumber}`);
+            const fields = section.querySelectorAll('input, textarea, select');
+            
+            let isValid = true;
+            
+            fields.forEach(field => {
+                if (!validateField(field)) {
+                    isValid = false;
+                }
+            });
+            
+            // Validación especial para la firma en la sección 5
+            if (sectionNumber === 5) {
+                const firmaInput = document.getElementById('firmaInput');
+                const firmaError = document.getElementById('firma_error');
+                
+                if (!firmaInput.value) {
+                    firmaError.style.display = 'block';
+                    isValid = false;
+                } else {
+                    firmaError.style.display = 'none';
+                }
+            }
+            
+            return isValid;
+        }
+        
+        // Navegación entre secciones con validación
+        function validateAndNext(currentSection) {
+            if (validateSection(currentSection)) {
+                nextSection(currentSection);
+            } else {
+                // Scroll al primer error
+                const firstError = document.querySelector(`#section${currentSection} .validation-error[style="display: block"]`);
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+        
+        function nextSection(currentSection) {
+            document.getElementById(`section${currentSection}`).classList.remove('active');
+            document.getElementById(`section${currentSection + 1}`).classList.add('active');
+            
+            document.querySelector(`.step[data-step="${currentSection}"]`).classList.add('completed');
+            document.querySelector(`.step[data-step="${currentSection + 1}"]`).classList.add('active');
+            
+            updateProgressBar();
+            window.scrollTo(0, 0);
+        }
+        
+        function prevSection(currentSection) {
+            document.getElementById(`section${currentSection}`).classList.remove('active');
+            document.getElementById(`section${currentSection - 1}`).classList.add('active');
+            
+            document.querySelector(`.step[data-step="${currentSection}"]`).classList.remove('active');
+            document.querySelector(`.step[data-step="${currentSection - 1}"]`).classList.add('active');
+            
+            updateProgressBar();
+            window.scrollTo(0, 0);
+        }
+        
+        function updateProgressBar() {
+            const totalSections = 5;
+            const activeSections = document.querySelectorAll('.step.completed, .step.active').length;
+            const progress = (activeSections / totalSections) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+        
+        // Función para descargar PDF
+        function downloadPDF() {
+            // Mostrar el modal de confirmación
+            const modal = document.getElementById('confirmModal');
+            modal.style.display = 'block';
+            
+            // Configurar los botones del modal
+            document.getElementById('confirmDownload').onclick = function() {
+                modal.style.display = 'none';
+                generateAndDownloadPDF();
+            };
+            
+            document.getElementById('cancelDownload').onclick = function() {
+                modal.style.display = 'none';
+            };
+            
+            document.querySelector('.close-modal').onclick = function() {
+                modal.style.display = 'none';
+            };
+            
+            // Cerrar el modal si se hace clic fuera de él
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+        
+        // Función para generar y descargar el PDF
+        async function generateAndDownloadPDF() {
+            // Mostrar indicador de carga
+            document.getElementById('loadingIndicator').style.display = 'flex';
+            document.getElementById('loadingText').textContent = 'Generando PDF, por favor espere...';
+            
+            try {
+                const pdfBlob = await generatePDFBlob();
+                
+                // Crear un enlace para descargar el PDF
+                const url = URL.createObjectURL(pdfBlob);
+                const a = document.createElement('a');
+                const cuit = document.getElementById('titular_cuit').value || 'formulario';
+                a.href = url;
+                a.download = `Declaracion_Jurada_OSPETAX_${cuit}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                
+                // Limpiar
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            } catch (error) {
+                console.error('Error al generar el PDF:', error);
+                alert('Ocurrió un error al generar el PDF. Por favor, intente nuevamente.');
+            } finally {
+                // Ocultar indicador de carga
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        }
+        
+        // Función para generar el PDF como Blob
+        async function generatePDFBlob() {
+            // Asegurarse de que el logo esté cargado
+            const logoImg = document.getElementById('logoOspetax');
+            
+            // Esperar a que el logo se cargue completamente
+            if (!logoImg.complete) {
+                await new Promise(resolve => {
+                    logoImg.onload = resolve;
+                    logoImg.onerror = resolve; // Continuar incluso si hay error
+                });
+            }
+            
+            // Crear un clon del contenedor para no modificar el original
+            const formContainer = document.getElementById('formContainer');
+            const clone = formContainer.cloneNode(true);
+            
+            // Aplicar estilos para el PDF
+            clone.style.background = 'white';
+            clone.style.padding = '20px';
+            clone.style.maxWidth = '100%';
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px';
+            clone.style.top = '0';
+            
+            // Asegurarse de que todas las secciones sean visibles en el clon
+            const sections = clone.querySelectorAll('.form-section');
+            sections.forEach(section => {
+                section.style.display = 'block';
+                section.classList.add('active');
+            });
+            
+            // Ocultar elementos de navegación y botones en el clon
+            const elementsToHide = clone.querySelectorAll('.form-navigation, .step-indicator, .progress-container, .download-button-container, .modal, .file-upload, .file-list, .validation-error, .google-drive-button, .google-drive-status');
+            elementsToHide.forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Ocultar el mensaje de éxito en el clon
+            const successMessage = clone.querySelector('.success-message');
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+            
+            // Añadir título para el PDF
+            const title = document.createElement('h1');
+            title.textContent = 'DECLARACIÓN JURADA DE SALUD - OSPETAX';
+            title.style.textAlign = 'center';
+            title.style.marginBottom = '20px';
+            title.style.color = '#0056b3';
+            
+            // Añadir fecha de generación
+            const dateInfo = document.createElement('p');
+            const today = new Date();
+            dateInfo.textContent = `Documento generado el: ${today.toLocaleDateString('es-AR')}`;
+            dateInfo.style.textAlign = 'right';
+            dateInfo.style.fontSize = '12px';
+            dateInfo.style.marginBottom = '30px';
+            
+            // Insertar título y fecha al principio del clon
+            clone.insertBefore(dateInfo, clone.firstChild);
+            clone.insertBefore(title, clone.firstChild);
+            
+            // Asegurarse de que la firma se muestre en el PDF
+            const originalSignatureCanvas = document.getElementById('signatureCanvas');
+            const signatureDataURL = document.getElementById('firmaInput').value;
+            
+            if (signatureDataURL) {
+                const signatureSection = clone.querySelector('.signature-container');
+                const cloneCanvas = signatureSection.querySelector('canvas');
+                
+                // Reemplazar el canvas con una imagen de la firma
+                const signatureImg = document.createElement('img');
+                signatureImg.src = signatureDataURL;
+                signatureImg.style.width = '100%';
+                signatureImg.style.maxWidth = '400px';
+                signatureImg.style.border = '1px solid #dee2e6';
+                signatureImg.style.borderRadius = '4px';
+                
+                if (cloneCanvas) {
+                    cloneCanvas.replaceWith(signatureImg);
+                } else {
+                    signatureSection.appendChild(signatureImg);
+                }
+            }
+            
+            // Añadir las imágenes adjuntadas al PDF
+            if (imagePreviewsForPDF.length > 0) {
+                const docsSection = clone.querySelector('#section4 .card');
+                
+                // Crear un contenedor para las imágenes
+                const imagesContainer = document.createElement('div');
+                imagesContainer.style.marginTop = '20px';
+                
+                // Añadir título para las imágenes
+                const imagesTitle = document.createElement('h3');
+                imagesTitle.textContent = 'Documentación Adjunta';
+                imagesTitle.style.marginBottom = '15px';
+                imagesContainer.appendChild(imagesTitle);
+                
+                // Añadir cada imagen
+                imagePreviewsForPDF.forEach((imgData, index) => {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.style.marginBottom = '15px';
+                    
+                    const imgTitle = document.createElement('p');
+                    imgTitle.textContent = `Documento ${index + 1}: ${imgData.name}`;
+                    imgTitle.style.fontWeight = 'bold';
+                    imgTitle.style.marginBottom = '5px';
+                    
+                    const img = document.createElement('img');
+                    img.src = imgData.src;
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '300px';
+                    img.style.border = '1px solid #dee2e6';
+                    img.style.borderRadius = '4px';
+                    
+                    imgContainer.appendChild(imgTitle);
+                    imgContainer.appendChild(img);
+                    imagesContainer.appendChild(imgContainer);
+                });
+                
+                docsSection.appendChild(imagesContainer);
+            }
+            
+            // Añadir el clon al documento para poder capturarlo
+            document.body.appendChild(clone);
+            
+            // Configurar opciones para html2canvas
+            const options = {
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                scrollY: 0
+            };
+            
+            try {
+                // Capturar el formulario
+                const canvas = await html2canvas(clone, options);
+                
+                // Eliminar el clon después de capturarlo
+                document.body.removeChild(clone);
+                
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                // Dimensiones de página A4
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                
+                // Calcular dimensiones manteniendo la proporción
+                const imgWidth = pageWidth;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                // Añadir la primera página
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Añadir páginas adicionales si es necesario
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // Convertir el PDF a Blob
+                return pdf.output('blob');
+            } catch (error) {
+                console.error('Error al generar el PDF:', error);
+                throw error;
+            }
+        }
+        
+        // Función para enviar el formulario
+        async function submitForm(event) {
+            event.preventDefault();
+            
+            // Validar todos los campos
+            let isValid = true;
+            for (let i = 1; i <= 5; i++) {
+                if (!validateSection(i)) {
+                    isValid = false;
+                    // Mostrar la sección con errores
+                    document.querySelectorAll('.form-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(`section${i}`).classList.add('active');
+                    
+                    // Actualizar los indicadores de paso
+                    document.querySelectorAll('.step').forEach(step => {
+                        step.classList.remove('active');
+                    });
+                    document.querySelector(`.step[data-step="${i}"]`).classList.add('active');
+                    
+                    // Scroll al primer error
+                    const firstError = document.querySelector(`#section${i} .validation-error[style="display: block"]`);
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    
+                    break;
+                }
+            }
+            
+            if (!isValid) {
+                return;
+            }
+            
+            // Mostrar indicador de carga
+            document.getElementById('loadingIndicator').style.display = 'flex';
+            document.getElementById('loadingText').textContent = 'Enviando formulario y guardando en Google Drive...';
+            
+            try {
+                // Guardar en Google Drive si está disponible
+                if (googleDriveAccessToken) {
+                    await savePDFToGoogleDrive();
+                }
+                
+                // Aquí se podría implementar el envío de datos al servidor
+                // Por ahora, solo mostramos el mensaje de éxito
+                document.getElementById('healthForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                
+                // Scroll al mensaje
+                window.scrollTo(0, 0);
+            } catch (error) {
+                console.error('Error al enviar el formulario:', error);
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth' });
+            } finally {
+                // Ocultar indicador de carga
+                document.getElementById('loadingIndicator').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
