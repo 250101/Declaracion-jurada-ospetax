@@ -577,7 +577,7 @@
     <div class="container" id="formContainer">
         <div class="header">
             <!-- Actualizado con el nuevo logo -->
-            <img src="https://github.com/250101/Declaracion-jurada-ospetax/blob/main/images/ospetax.jpg" alt="Logo OSPETAX" class="logo" id="logoOspetax" crossorigin="anonymous">
+            <img src="./images/ospetax.jpg" alt="Logo OSPETAX" class="logo" id="logoOspetax" crossorigin="anonymous">
             <div class="header-text">
                 <h1>OBRA SOCIAL DE PEONES DE TAXI DE LA CAPITAL FEDERAL</h1>
                 <p>RNOS 1-2370-1</p>
@@ -631,10 +631,6 @@
                             <div class="validation-error" id="titular_cuit_error">Ingrese un CUIT válido (XX-XXXXXXXX-X)</div>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label for="opcion_numero">Opción N°</label>
-                            <input type="number" id="opcion_numero" name="opcion_numero">
                         </div>
                         <div class="form-col">
                             <label for="titular_fecha_nac" class="required">Fecha de Nacimiento</label>
@@ -651,7 +647,12 @@
                             <label for="titular_email" class="required">Email</label>
                             <input type="email" id="titular_email" name="titular_email" required>
                             <div class="validation-error" id="titular_email_error">Ingrese un email válido</div>
-                        </div>
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label for="celular" class="required">Celular</label>
+                                    <input type="tel" id="celular" name="celular" required>
+                                    <div class="validation-error" id="celular_error">Este campo es obligatorio</div>
+                                </div>
                     </div>
                 </div>
 
@@ -728,25 +729,6 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header">Información de Contacto</div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label for="telefono">Teléfono</label>
-                            <input type="tel" id="telefono" name="telefono">
-                        </div>
-                        <div class="form-col">
-                            <label for="celular" class="required">Celular</label>
-                            <input type="tel" id="celular" name="celular" required>
-                            <div class="validation-error" id="celular_error">Este campo es obligatorio</div>
-                        </div>
-                        <div class="form-col">
-                            <label for="email_contacto">E-mail</label>
-                            <input type="email" id="email_contacto" name="email_contacto">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
                     <div class="card-header">Contacto de Emergencia</div>
                     <div class="form-row">
                         <div class="form-col">
@@ -760,10 +742,6 @@
                                 <option value="">Seleccione una relación</option>
                                 <option value="Cónyuge">Cónyuge</option>
                                 <option value="Hijo/a">Hijo/a</option>
-                                <option value="Padre/Madre">Padre/Madre</option>
-                                <option value="Hermano/a">Hermano/a</option>
-                                <option value="Amigo/a">Amigo/a</option>
-                                <option value="Otro">Otro</option>
                             </select>
                             <div class="validation-error" id="contacto_relacion_error">Este campo es obligatorio</div>
                         </div>
@@ -2432,5 +2410,56 @@
             }
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <script>
+      async function submitForm(event) {
+        event.preventDefault();
+    
+        const cuit = document.getElementById('titular_cuit').value || "no-cuit";
+        const formElement = document.getElementById('formulario');
+        const canvas = await html2canvas(formElement, { scale: 2 });
+    
+        const pdf = new jspdf.jsPDF();
+        const imgData = canvas.toDataURL('image/png');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        const pdfBase64 = pdf.output('datauristring');
+    
+        const inputs = document.querySelectorAll('input, select, textarea');
+        const formData = {};
+        inputs.forEach(input => {
+          const name = input.name || input.id;
+          if (name) formData[name] = input.value;
+        });
+    
+        const payload = {
+          cuit: cuit,
+          pdfBase64: pdfBase64,
+          formData: formData
+        };
+    
+        const webhookUrl = 'https://script.google.com/macros/s/AKfycbw6awEgSv8XTTJhTK9JNQsBM-CZ0AMaoj4TdvYfTiSZLW_tNB1u_fcIG8wy3W_mbctYmA/exec'; // reemplazalo por tu URL de Apps Script
+    
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json' }
+        });
+    
+        const result = await response.json();
+        if (result.status === 'success') {
+          alert('Formulario enviado correctamente');
+        } else {
+          alert('Error: ' + result.message);
+        }
+      }
+    
+      document.getElementById('formulario').addEventListener('submit', submitForm);
+    </script>
+    
 </body>
 </html>
