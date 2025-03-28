@@ -737,7 +737,7 @@
 
                 <div class="form-navigation">
                     <div></div>
-                    <button type="button" class="btn" onclick="validateAndNext(1)">Siguiente</button>
+                    <button type="button" class="btn" onclick="nextSection(1)">Siguiente</button>
                 </div>
             </div>
 
@@ -1397,8 +1397,8 @@
                 </div>
 
                 <div class="form-navigation">
-                    <button type="button" class="btn btn-secondary" onclick="goToPrevious(2)">Anterior</button>
-                    <button type="button" class="btn" onclick="validateAndNext(2)">Siguiente</button>
+                    <button type="button" class="btn btn-secondary" onclick="prevSection(2)">Anterior</button>
+                    <button type="button" class="btn" onclick="nextSection(2)">Siguiente</button>
                 </div>
             </div>
 
@@ -1472,8 +1472,8 @@
                 </div>
 
                 <div class="form-navigation">
-                    <button type="button" class="btn btn-secondary" onclick="goToPrevious(3)">Anterior</button>
-                    <button type="button" class="btn" onclick="validateAndNext(3)">Siguiente</button>
+                    <button type="button" class="btn btn-secondary" onclick="prevSection(3)">Anterior</button>
+                    <button type="button" class="btn" onclick="nextSection(3)">Siguiente</button>
                 </div>
             </div>
 
@@ -1500,8 +1500,8 @@
                 </div>
 
                 <div class="form-navigation">
-                    <button type="button" class="btn btn-secondary" onclick="goToPrevious(4)">Anterior</button>
-                    <button type="button" class="btn" onclick="validateAndNext(4)">Siguiente</button>
+                    <button type="button" class="btn btn-secondary" onclick="prevSection(4)">Anterior</button>
+                    <button type="button" class="btn" onclick="nextSection(4)">Siguiente</button>
                 </div>
             </div>
 
@@ -1552,7 +1552,7 @@
                 </div>
 
                 <div class="form-navigation">
-                    <button type="button" class="btn btn-secondary" onclick="goToPrevious(5)">Anterior</button>
+                    <button type="button" class="btn btn-secondary" onclick="prevSection(5)">Anterior</button>
                     <button type="button" class="btn btn-success btn-block" onclick="submitForm()">Enviar Formulario</button>
                 </div>
 
@@ -1566,6 +1566,172 @@
         </form>
     </div>
 
+    <script>
+        // Basic navigation functions
+        function nextSection(currentSection) {
+            document.getElementById(`section${currentSection}`).classList.remove('active');
+            document.getElementById(`section${currentSection + 1}`).classList.add('active');
+            
+            document.querySelector(`.step[data-step="${currentSection}"]`).classList.add('completed');
+            document.querySelector(`.step[data-step="${currentSection + 1}"]`).classList.add('active');
+            
+            updateProgressBar();
+            window.scrollTo(0, 0);
+        }
+        
+        function prevSection(currentSection) {
+            document.getElementById(`section${currentSection}`).classList.remove('active');
+            document.getElementById(`section${currentSection - 1}`).classList.add('active');
+            
+            document.querySelector(`.step[data-step="${currentSection}"]`).classList.remove('active');
+            document.querySelector(`.step[data-step="${currentSection - 1}"]`).classList.add('active');
+            
+            updateProgressBar();
+            window.scrollTo(0, 0);
+        }
+        
+        function updateProgressBar() {
+            const totalSections = 5;
+            const activeSections = document.querySelectorAll('.step.completed, .step.active').length;
+            const progress = (activeSections / totalSections) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+        
+        // Setup date auto-fill
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaNacInput = document.getElementById('titular_fecha_nac');
+            const edadInput = document.getElementById('titular_edad');
+            
+            if (fechaNacInput && edadInput) {
+                fechaNacInput.addEventListener('change', function() {
+                    if (this.value) {
+                        const birthDate = new Date(this.value);
+                        const today = new Date();
+                        
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const monthDiff = today.getMonth() - birthDate.getMonth();
+                        
+                        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                            age--;
+                        }
+                        
+                        edadInput.value = age;
+                    }
+                });
+            }
+            
+            // Set current date in date field
+            const fechaInput = document.getElementById('fecha');
+            if (fechaInput) {
+                const today = new Date().toISOString().split('T')[0];
+                fechaInput.value = today;
+            }
+            
+            // Setup signature canvas
+            setupSignatureCanvas();
+        });
+        
+        // Setup signature canvas
+        function setupSignatureCanvas() {
+            const canvas = document.getElementById('signatureCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            let drawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000';
+            
+            // Mouse events
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            // Touch events
+            canvas.addEventListener('touchstart', startDrawingTouch);
+            canvas.addEventListener('touchmove', drawTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+            
+            function getPosition(e) {
+                const rect = canvas.getBoundingClientRect();
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+            
+            function startDrawing(e) {
+                drawing = true;
+                const pos = getPosition(e);
+                lastX = pos.x;
+                lastY = pos.y;
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+            }
+            
+            function draw(e) {
+                if (!drawing) return;
+                const pos = getPosition(e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                lastX = pos.x;
+                lastY = pos.y;
+            }
+            
+            function startDrawingTouch(e) {
+                e.preventDefault();
+                drawing = true;
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                lastX = touch.clientX - rect.left;
+                lastY = touch.clientY - rect.top;
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+            }
+            
+            function drawTouch(e) {
+                if (!drawing) return;
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                lastX = x;
+                lastY = y;
+            }
+            
+            function stopDrawing() {
+                if (drawing) {
+                    drawing = false;
+                    ctx.closePath();
+                    document.getElementById('firmaInput').value = canvas.toDataURL();
+                }
+            }
+        }
+        
+        // Clear signature
+        function clearSignature() {
+            const canvas = document.getElementById('signatureCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('firmaInput').value = '';
+        }
+        
+        // Submit form
+        function submitForm() {
+            // This is a placeholder - the actual submission logic would be in main.js
+            alert('Formulario enviado con éxito');
+        }
+    </script>
     <script src="./main.js"></script>
 </body>
 </html>
+
