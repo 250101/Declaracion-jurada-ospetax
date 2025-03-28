@@ -1,20 +1,8 @@
 {
-  "name": "declaracion-jurada-ospetax",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "my-v0-project",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/250101/Declaracion-jurada-ospetax.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/250101/Declaracion-jurada-ospetax/issues"
-  },
-  "homepage": "https://github.com/250101/Declaracion-jurada-ospetax#readme",
-  "description": ""
+    "build": "echo 'no build script'"
+  }
 }

@@ -416,7 +416,6 @@
             margin-top: 20px;
         }
         
-        /* Estilos para las previsualizaciones de imágenes */
         .image-preview-container {
             display: flex;
             flex-wrap: wrap;
@@ -432,7 +431,6 @@
             border-radius: 4px;
         }
         
-        /* Estilos para el indicador de carga */
         #loadingIndicator {
             display: none;
             position: fixed;
@@ -461,7 +459,6 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Estilos para mensajes de validación */
         .validation-error {
             color: var(--error-color);
             font-size: 12px;
@@ -471,34 +468,6 @@
         
         input.invalid, textarea.invalid, select.invalid {
             border-color: var(--error-color);
-        }
-        
-        /* Estilos para opciones predefinidas */
-        .predefined-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 5px;
-        }
-        
-        .option-chip {
-            background-color: var(--secondary-color);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 5px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .option-chip:hover {
-            background-color: #e9ecef;
-        }
-        
-        .option-chip.selected {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
         }
         
         @media (max-width: 768px) {
@@ -568,15 +537,13 @@
         <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <!-- Indicador de carga -->
-    <div id="loadingIndicator" style="display: none;">
+    <div id="loadingIndicator">
         <div class="spinner"></div>
         <p style="margin-top: 15px;" id="loadingText">Procesando, por favor espere...</p>
     </div>
 
     <div class="container" id="formContainer">
         <div class="header">
-            <!-- Actualizado con el nuevo logo -->
             <img src="./images/ospetax.jpg" alt="Logo OSPETAX" class="logo" id="logoOspetax" crossorigin="anonymous">
             <div class="header-text">
                 <h1>OBRA SOCIAL DE PEONES DE TAXI DE LA CAPITAL FEDERAL</h1>
@@ -614,7 +581,7 @@
             </div>
         </div>
 
-        <form id="healthForm" onsubmit="submitForm(event)">
+        <form id="healthForm">
             <!-- Sección 1: Datos Personales -->
             <div class="form-section active" id="section1">
                 <div class="card">
@@ -631,7 +598,7 @@
                             <div class="validation-error" id="titular_cuit_error">Ingrese un CUIT válido (XX-XXXXXXXX-X)</div>
                         </div>
                     </div>
-                        </div>
+                    <div class="form-row">
                         <div class="form-col">
                             <label for="titular_fecha_nac" class="required">Fecha de Nacimiento</label>
                             <input type="date" id="titular_fecha_nac" name="titular_fecha_nac" required>
@@ -647,12 +614,12 @@
                             <label for="titular_email" class="required">Email</label>
                             <input type="email" id="titular_email" name="titular_email" required>
                             <div class="validation-error" id="titular_email_error">Ingrese un email válido</div>
-                            <div class="form-row">
-                                <div class="form-col">
-                                    <label for="celular" class="required">Celular</label>
-                                    <input type="tel" id="celular" name="celular" required>
-                                    <div class="validation-error" id="celular_error">Este campo es obligatorio</div>
-                                </div>
+                        </div>
+                        <div class="form-col">
+                            <label for="celular" class="required">Celular</label>
+                            <input type="tel" id="celular" name="celular" required>
+                            <div class="validation-error" id="celular_error">Este campo es obligatorio</div>
+                        </div>
                     </div>
                 </div>
 
@@ -742,6 +709,7 @@
                                 <option value="">Seleccione una relación</option>
                                 <option value="Cónyuge">Cónyuge</option>
                                 <option value="Hijo/a">Hijo/a</option>
+                                <option value="Otro">Otro</option>
                             </select>
                             <div class="validation-error" id="contacto_relacion_error">Este campo es obligatorio</div>
                         </div>
@@ -825,7 +793,7 @@
                                     <td><input type="number" name="altura_hijo5"></td>
                                 </tr>
                                 <tr>
-                                    <td>Fuma / Ctos</td>
+                                    <td>Fuma / Cantidad</td>
                                     <td>
                                         <select name="fuma_titular">
                                             <option value="">Seleccione</option>
@@ -907,7 +875,7 @@
                                     <td><input type="text" name="trat_pen_hijo5"></td>
                                 </tr>
                                 <tr>
-                                    <td>Tiene alguna prótesis colocadas - Detallar</td>
+                                    <td>Prótesis - Detallar</td>
                                     <td><input type="text" name="protesis_titular"></td>
                                     <td><input type="text" name="protesis_esposa"></td>
                                     <td><input type="text" name="protesis_hijo1"></td>
@@ -917,7 +885,7 @@
                                     <td><input type="text" name="protesis_hijo5"></td>
                                 </tr>
                                 <tr>
-                                    <td>Está o necesita tratamiento psicológico</td>
+                                    <td>¿Realiza tratamiento psicológico?</td>
                                     <td>
                                         <select name="psico_titular">
                                             <option value="">Seleccione</option>
@@ -969,7 +937,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Está o necesita tratamiento nutricional</td>
+                                    <td>¿Realiza tratamiento nutricional?</td>
                                     <td>
                                         <select name="nutri_titular">
                                             <option value="">Seleccione</option>
@@ -1021,7 +989,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Está o necesita tratamiento pedagógico</td>
+                                    <td>¿Realiza tratamiento pedagógico?</td>
                                     <td>
                                         <select name="peda_titular">
                                             <option value="">Seleccione</option>
@@ -1073,7 +1041,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Está o necesita tratamiento oftalmológico</td>
+                                    <td>¿Realiza tratamiento oftalmológico?</td>
                                     <td>
                                         <select name="oftalmo_titular">
                                             <option value="">Seleccione</option>
@@ -1125,7 +1093,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Está o necesita tratamiento odontológico</td>
+                                    <td>¿Realiza tratamiento odontológico?</td>
                                     <td>
                                         <select name="odonto_titular">
                                             <option value="">Seleccione</option>
@@ -1177,7 +1145,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Está tomando alguna medicación crónica - Detallar</td>
+                                    <td>¿Toma medicación crónica? - Detallar</td>
                                     <td><input type="text" name="med_cronica_titular"></td>
                                     <td><input type="text" name="med_cronica_esposa"></td>
                                     <td><input type="text" name="med_cronica_hijo1"></td>
@@ -1187,7 +1155,7 @@
                                     <td><input type="text" name="med_cronica_hijo5"></td>
                                 </tr>
                                 <tr>
-                                    <td>Es alérgico a algún medicamento - Detallar</td>
+                                    <td>¿Tiene alergias? - Detallar</td>
                                     <td><input type="text" name="alergia_titular"></td>
                                     <td><input type="text" name="alergia_esposa"></td>
                                     <td><input type="text" name="alergia_hijo1"></td>
@@ -1197,7 +1165,7 @@
                                     <td><input type="text" name="alergia_hijo5"></td>
                                 </tr>
                                 <tr>
-                                    <td>Tiene problemas de varices</td>
+                                    <td>¿Tiene várices?</td>
                                     <td>
                                         <select name="varices_titular">
                                             <option value="">Seleccione</option>
@@ -1249,59 +1217,66 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Tuvo o tiene presión alta</td>
+                                    <td>¿Tiene presión alta o baja?</td>
                                     <td>
                                         <select name="presion_titular">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Alta">Alta</option>
+                                            <option value="Baja">Baja</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="presion_esposa">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Alta">Alta</option>
+                                            <option value="Baja">Baja</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="presion_hijo1">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Alta">Alta</option>
+                                            <option value="Baja">Baja</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="presion_hijo2">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Alta">Alta</option>
+                                            <option value="Baja">Baja</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="presion_hijo3">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Alta">Alta</option>
+                                            <option value="Baja">Baja</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="presion_hijo4">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Alta">Alta</option>
+                                            <option value="Baja">Baja</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="presion_hijo5">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Alta">Alta</option>
+                                            <option value="Baja">Baja</option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Tuvo o tiene diabetes</td>
+                                    <td>¿Tiene diabetes?</td>
                                     <td>
                                         <select name="diabetes_titular">
                                             <option value="">Seleccione</option>
@@ -1353,72 +1328,76 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Está embarazada (Si lo está, especifique de cuantos meses en observaciones)</td>
+                                    <td>¿Está embarazada o en período de lactancia?</td>
                                     <td>
                                         <select name="embarazo_titular">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Embarazada">Embarazada</option>
+                                            <option value="Lactancia">Lactancia</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="embarazo_esposa">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Embarazada">Embarazada</option>
+                                            <option value="Lactancia">Lactancia</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="embarazo_hijo1">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Embarazada">Embarazada</option>
+                                            <option value="Lactancia">Lactancia</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="embarazo_hijo2">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Embarazada">Embarazada</option>
+                                            <option value="Lactancia">Lactancia</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="embarazo_hijo3">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Embarazada">Embarazada</option>
+                                            <option value="Lactancia">Lactancia</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="embarazo_hijo4">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Embarazada">Embarazada</option>
+                                            <option value="Lactancia">Lactancia</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select name="embarazo_hijo5">
                                             <option value="">Seleccione</option>
                                             <option value="No">No</option>
-                                            <option value="Sí">Sí</option>
+                                            <option value="Embarazada">Embarazada</option>
+                                            <option value="Lactancia">Lactancia</option>
                                         </select>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-header">Observaciones</div>
                     <div class="form-group">
-                        <label for="observaciones">Detallar y agregar alguna otra condición que no esté mencionada dentro de esta declaración jurada:</label>
-                        <textarea name="observaciones" id="observaciones" rows="4"></textarea>
+                        <label for="observaciones">Observaciones</label>
+                        <textarea id="observaciones" name="observaciones" rows="4"></textarea>
                     </div>
                 </div>
 
                 <div class="form-navigation">
-                    <button type="button" class="btn btn-secondary" onclick="prevSection(2)">Anterior</button>
+                    <button type="button" class="btn btn-secondary" onclick="goToPrevious(2)">Anterior</button>
                     <button type="button" class="btn" onclick="validateAndNext(2)">Siguiente</button>
                 </div>
             </div>
@@ -1427,14 +1406,13 @@
             <div class="form-section" id="section3">
                 <div class="card">
                     <div class="card-header">Grupo Familiar</div>
-                    <p class="mb-4">Complete los datos de los integrantes del grupo familiar</p>
-                    
+                    <p class="mb-4">Complete los datos del grupo familiar que desea incluir en la cobertura</p>
                     <table>
                         <thead>
                             <tr>
-                                <th>Apellido y Nombres</th>
+                                <th>Apellido y Nombre</th>
                                 <th>Parentesco</th>
-                                <th>Documento</th>
+                                <th>N° Documento</th>
                                 <th>Fecha de Nacimiento</th>
                                 <th>Observaciones</th>
                             </tr>
@@ -1442,112 +1420,49 @@
                         <tbody>
                             <tr>
                                 <td><input type="text" name="gf_nombre1"></td>
-                                <td>
-                                    <select name="gf_parentesco1">
-                                        <option value="">Seleccione</option>
-                                        <option value="Cónyuge">Cónyuge</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-                                </td>
+                                <td><input type="text" name="gf_parentesco1"></td>
                                 <td><input type="text" name="gf_documento1"></td>
                                 <td><input type="date" name="gf_fecha_nac1"></td>
                                 <td><input type="text" name="gf_observ1"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre2"></td>
-                                <td>
-                                    <select name="gf_parentesco2">
-                                        <option value="">Seleccione</option>
-                                        <option value="Cónyuge">Cónyuge</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-                                </td>
+                                <td><input type="text" name="gf_parentesco2"></td>
                                 <td><input type="text" name="gf_documento2"></td>
                                 <td><input type="date" name="gf_fecha_nac2"></td>
                                 <td><input type="text" name="gf_observ2"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre3"></td>
-                                <td>
-                                    <select name="gf_parentesco3">
-                                        <option value="">Seleccione</option>
-                                        <option value="Cónyuge">Cónyuge</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-                                </td>
+                                <td><input type="text" name="gf_parentesco3"></td>
                                 <td><input type="text" name="gf_documento3"></td>
                                 <td><input type="date" name="gf_fecha_nac3"></td>
                                 <td><input type="text" name="gf_observ3"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre4"></td>
-                                <td>
-                                    <select name="gf_parentesco4">
-                                        <option value="">Seleccione</option>
-                                        <option value="Cónyuge">Cónyuge</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-                                </td>
+                                <td><input type="text" name="gf_parentesco4"></td>
                                 <td><input type="text" name="gf_documento4"></td>
                                 <td><input type="date" name="gf_fecha_nac4"></td>
                                 <td><input type="text" name="gf_observ4"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre5"></td>
-                                <td>
-                                    <select name="gf_parentesco5">
-                                        <option value="">Seleccione</option>
-                                        <option value="Cónyuge">Cónyuge</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-                                </td>
+                                <td><input type="text" name="gf_parentesco5"></td>
                                 <td><input type="text" name="gf_documento5"></td>
                                 <td><input type="date" name="gf_fecha_nac5"></td>
                                 <td><input type="text" name="gf_observ5"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre6"></td>
-                                <td>
-                                    <select name="gf_parentesco6">
-                                        <option value="">Seleccione</option>
-                                        <option value="Cónyuge">Cónyuge</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-                                </td>
+                                <td><input type="text" name="gf_parentesco6"></td>
                                 <td><input type="text" name="gf_documento6"></td>
                                 <td><input type="date" name="gf_fecha_nac6"></td>
                                 <td><input type="text" name="gf_observ6"></td>
                             </tr>
                             <tr>
                                 <td><input type="text" name="gf_nombre7"></td>
-                                <td>
-                                    <select name="gf_parentesco7">
-                                        <option value="">Seleccione</option>
-                                        <option value="Cónyuge">Cónyuge</option>
-                                        <option value="Hijo/a">Hijo/a</option>
-                                        <option value="Padre/Madre">Padre/Madre</option>
-                                        <option value="Hermano/a">Hermano/a</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-                                </td>
+                                <td><input type="text" name="gf_parentesco7"></td>
                                 <td><input type="text" name="gf_documento7"></td>
                                 <td><input type="date" name="gf_fecha_nac7"></td>
                                 <td><input type="text" name="gf_observ7"></td>
@@ -1557,7 +1472,7 @@
                 </div>
 
                 <div class="form-navigation">
-                    <button type="button" class="btn btn-secondary" onclick="prevSection(3)">Anterior</button>
+                    <button type="button" class="btn btn-secondary" onclick="goToPrevious(3)">Anterior</button>
                     <button type="button" class="btn" onclick="validateAndNext(3)">Siguiente</button>
                 </div>
             </div>
@@ -1566,31 +1481,26 @@
             <div class="form-section" id="section4">
                 <div class="card">
                     <div class="card-header">Documentación</div>
-                    
                     <div class="form-group">
-                        <label>Adjuntar Documentación</label>
-                        <div class="file-upload" id="fileUploadArea">
-                            <p>Haga clic aquí o arrastre los archivos para adjuntar</p>
-                            <p class="small-text">Formatos aceptados: JPG, PNG, PDF</p>
-                            <input type="file" name="documentos" id="documentos" class="file-upload-input" multiple accept="image/*,application/pdf">
-                        </div>
-                        <ul class="file-list" id="fileList"></ul>
-                        
-                        <!-- Contenedor para mostrar las previsualizaciones de imágenes -->
-                        <div class="image-preview-container" id="imagePreviewContainer"></div>
+                        <label for="documentos">Documentos a adjuntar (seleccione todos los que correspondan)</label>
+                        <select id="documentos" name="documentos" multiple>
+                            <option value="DNI Titular">DNI Titular</option>
+                            <option value="DNI Familiares">DNI Familiares</option>
+                            <option value="Certificado de Nacimiento">Certificado de Nacimiento</option>
+                            <option value="Certificado de Matrimonio">Certificado de Matrimonio</option>
+                            <option value="Otros">Otros</option>
+                        </select>
                     </div>
-                    
-                    <div class="important-notice">
-                        <strong>IMPORTANTE:</strong><br>
-                        SE DEJA EXPRESAMENTE ACLARADO QUE EL GRUPO FAMILIAR DEL AFILIADO PARA OBTENER LA COBERTURA DE LA OBRA SOCIAL DEBERÁ PRESENTAR TODA LA DOCUMENTACIÓN REQUERIDA.<br><br>
-                        <strong>DOCUMENTACIÓN A PRESENTAR:</strong><br>
-                        <strong>ESPOSA/O CÓNYUGE:</strong> CERTIFICADO DE CASAMIENTO EN EL CASO QUE ESTUVIERAN CASADOS LEGALMENTE. PARA CONVIVIENTE: CERTIFICADO DE CONCUBINATO CON DOS TESTIGOS NO MAYOR A 1 AÑO AL MOMENTO DE AFILIARSE. SI TUVIERA HIJOS QUE NO SON DEL TITULAR DEBERÁN DECLARARLOS EN EL CERTIFICADO DONDE DEBEN INFORMAR QUE ESTÁN A CARGO DEL TITULAR. FOTOCOPIA DE DOCUMENTO DE LOS DOS LADOS.<br>
-                        <strong>HIJOS:</strong> CERTIFICADO DE NACIMIENTO, FOTOCOPIA DEL DOCUMENTO DE LOS DOS LADOS. EN CASO DE SER MAYOR A 21 AÑOS EL ORIGINAL DEL CERTIFICADO DE ESTUDIOS EMITIDO POR EL CENTRO DE ESTUDIOS.
+                    <div class="file-upload" id="fileUploadArea">
+                        <p>Arrastre y suelte los archivos aquí o haga clic para seleccionar</p>
+                        <input type="file" id="fileInput" class="file-upload-input" multiple accept="image/*,application/pdf">
                     </div>
+                    <ul class="file-list" id="fileList"></ul>
+                    <div class="image-preview-container" id="imagePreviewContainer"></div>
                 </div>
 
                 <div class="form-navigation">
-                    <button type="button" class="btn btn-secondary" onclick="prevSection(4)">Anterior</button>
+                    <button type="button" class="btn btn-secondary" onclick="goToPrevious(4)">Anterior</button>
                     <button type="button" class="btn" onclick="validateAndNext(4)">Siguiente</button>
                 </div>
             </div>
@@ -1598,868 +1508,64 @@
             <!-- Sección 5: Confirmación -->
             <div class="form-section" id="section5">
                 <div class="card">
-                    <div class="card-header">Firma y Confirmación</div>
-                    
+                    <div class="card-header">Confirmación</div>
+                    <div class="important-notice">
+                        <p><strong>Importante:</strong> Se informa que, para acceder a la cobertura médica, todo el grupo familiar debe presentar la documentación requerida:
+                            -	DNI ambos lados de todo el grupo familiar
+                            -	Si está legalmente casado, certificado de matrimonio
+                            -	Si sos conviviente, certificado de concubinato
+                            -	Si tiene hijos, certificado de nacimiento  
+                            -	Si tiene adherentes a su cargo, certificado de tutela o guarda
+                            -	Si tiene hijos mayores de 21 años, certificado de alumno regular emitido por la entidad educativa
+                            El acceso a la cobertura es progresivo, debe esperar los períodos de carencia para acceder a ciertas prestaciones. 6 MESES: Alta complejidad / Cirugías programadas. 10 MESES: Maternidad (internación obstétrica). 12 MESES: Cirugía cardiovascular central y periférica / Transplantes / Terapia radiante (radioterapia, cobaltoterapia) / Hemodiálisis. Se cubre exclusivamente el PMO (Programa Médico Obligatorio). Si solicita prestaciones por fuera del PMO no serán aprobadas.
+                            Conexión Salud S.R.L. se reserva el derecho de aceptar o rechazar esta solicitud, total o parcialmente, indicando en este último caso, las preexistentes que no se le cubrirán al asociado. La falta de respuesta de esta solicitud se considerará como rechazo de la misma.
+                            Aceptación del Uso de Datos Personales: Al aceptar estos términos y condiciones, usted es consiente y autoriza expresamente a Conexión Salud a recopilar, almacenar, utilizar y procesar sus datos personales con la finalidad de prestar el servicio contratado.
+                            Declaro bajo juramente haber leído detenidamente y aceptar en su totalidad los detalles de asociación enunciadas en las condiciones mencionadas anteriormente en el presente formulario.</p>
+                    </div>
                     <div class="form-group">
-                        <label for="signatureCanvas" class="required">Firma:</label>
+                        <label>Firma del Titular</label>
                         <div class="signature-container">
-                            <canvas id="signatureCanvas" width="400" height="150"></canvas>
-                            <input type="hidden" name="firma" id="firmaInput">
-                            <div class="validation-error" id="firma_error">La firma es obligatoria</div>
-                            <button type="button" class="btn btn-secondary mt-4" onclick="clearSignature()">Borrar Firma</button>
+                            <canvas id="signatureCanvas" width="400" height="200"></canvas>
+                            <input type="hidden" id="firmaInput" name="firma">
+                            <div class="mt-4">
+                                <button type="button" class="btn btn-secondary" onclick="clearSignature()">Borrar Firma</button>
+                            </div>
                         </div>
                     </div>
-                    
                     <div class="form-row">
                         <div class="form-col">
-                            <label for="aclaracion" class="required">Aclaración:</label>
+                            <label for="fecha" class="required">Fecha</label>
+                            <input type="date" id="fecha" name="fecha" required>
+                            <div class="validation-error" id="fecha_error">Este campo es obligatorio</div>
+                        </div>
+                        <div class="form-col">
+                            <label for="aclaracion" class="required">Aclaración</label>
                             <input type="text" id="aclaracion" name="aclaracion" required>
                             <div class="validation-error" id="aclaracion_error">Este campo es obligatorio</div>
                         </div>
                         <div class="form-col">
-                            <label for="documento" class="required">Documento:</label>
+                            <label for="documento" class="required">Documento</label>
                             <input type="text" id="documento" name="documento" required>
                             <div class="validation-error" id="documento_error">Este campo es obligatorio</div>
-                        </div>
-                        <div class="form-col">
-                            <label for="fecha" class="required">Fecha:</label>
-                            <input type="date" id="fecha" name="fecha" required>
-                            <div class="validation-error" id="fecha_error">Este campo es obligatorio</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-navigation">
-                    <button type="button" class="btn btn-secondary" onclick="prevSection(5)">Anterior</button>
-                    <button type="submit" class="btn">Enviar Formulario</button>
+                    <button type="button" class="btn btn-secondary" onclick="goToPrevious(5)">Anterior</button>
+                    <button type="button" class="btn btn-success btn-block" onclick="submitForm()">Enviar Formulario</button>
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    ¡Formulario enviado con éxito! El PDF ha sido generado y subido a Google Drive, y los datos han sido guardados en Google Sheets.
+                </div>
+                <div class="error-message" id="errorMessage">
+                    Ocurrió un error al enviar el formulario. Por favor, intenta nuevamente.
                 </div>
             </div>
         </form>
-
-        <div class="success-message" id="successMessage">
-            <h3>¡Formulario enviado con éxito!</h3>
-            <p>El formulario se ha completado correctamente y se ha guardado en Google Drive. Para acceder a la credencial deberá comunicarse con la casilla de <strong>afiliaciones@conexionsalud.com.ar</strong></p>
-        </div>
-
-        <div class="error-message" id="errorMessage">
-            <h3>Error al enviar el formulario</h3>
-            <p>Por favor, verifique los datos ingresados e intente nuevamente.</p>
-        </div>
     </div>
 
-    <script>
-        // Variables globales
-        const canvas = document.getElementById('signatureCanvas');
-        const ctx = canvas.getContext('2d');
-        let drawing = false;
-        let lastX = 0;
-        let lastY = 0;
-        let uploadedFiles = [];
-        let imagePreviewsForPDF = [];
-        
-        // Configuración de Google Cloud API
-        const API_KEY = 'YOUR_GOOGLE_API_KEY'; // Reemplazar con tu API Key
-        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // Reemplazar con tu Client ID
-        const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID'; // ID de la hoja de cálculo de Google
-        const DRIVE_FOLDER_ID = 'YOUR_DRIVE_FOLDER_ID'; // ID de la carpeta en Google Drive
-        
-        // Configuración inicial
-        document.addEventListener('DOMContentLoaded', function() {
-            setupSignatureCanvas();
-            setupFileUpload();
-            setupDateAutoFill();
-            setupPredefinedOptions();
-            loadGoogleAPIs();
-            
-            // Establecer la fecha actual en el campo de fecha
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('fecha').value = today;
-            
-            // Precargar el logo para asegurar que esté disponible para el PDF
-            preloadLogo();
-        });
-        
-        // Cargar las APIs de Google
-        function loadGoogleAPIs() {
-            // Cargar la API de Google Drive
-            gapi.load('client:auth2', initGoogleAPIs);
-        }
-        
-        // Inicializar las APIs de Google
-        function initGoogleAPIs() {
-            gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: [
-                    'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
-                    'https://sheets.googleapis.com/$discovery/rest?version=v4'
-                ],
-                scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets'
-            }).then(function() {
-                console.log('Google APIs inicializadas correctamente');
-            }).catch(function(error) {
-                console.error('Error al inicializar Google APIs:', error);
-            });
-        }
-        
-        // Configurar opciones predefinidas
-        function setupPredefinedOptions() {
-            // Implementar selección de opciones predefinidas si es necesario
-            const optionChips = document.querySelectorAll('.option-chip');
-            optionChips.forEach(chip => {
-                chip.addEventListener('click', function() {
-                    const input = this.parentElement.previousElementSibling;
-                    input.value = this.textContent;
-                    
-                    // Actualizar estado visual
-                    this.parentElement.querySelectorAll('.option-chip').forEach(c => {
-                        c.classList.remove('selected');
-                    });
-                    this.classList.add('selected');
-                });
-            });
-        }
-        
-        // Precargar el logo
-        function preloadLogo() {
-            const logoImg = document.getElementById('logoOspetax');
-            logoImg.onload = function() {
-                console.log('Logo cargado correctamente');
-            };
-            logoImg.onerror = function() {
-                console.error('Error al cargar el logo');
-            };
-        }
-        
-        // Configuración del canvas para firma
-        function setupSignatureCanvas() {
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#000';
-            
-            // Eventos de mouse
-            canvas.addEventListener('mousedown', startDrawing);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing);
-            canvas.addEventListener('mouseout', stopDrawing);
-            
-            // Eventos táctiles
-            canvas.addEventListener('touchstart', startDrawingTouch);
-            canvas.addEventListener('touchmove', drawTouch);
-            canvas.addEventListener('touchend', stopDrawing);
-        }
-        
-        function getPosition(e) {
-            const rect = canvas.getBoundingClientRect();
-            return {
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top
-            };
-        }
-        
-        function startDrawing(e) {
-            drawing = true;
-            const pos = getPosition(e);
-            lastX = pos.x;
-            lastY = pos.y;
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-        }
-        
-        function draw(e) {
-            if (!drawing) return;
-            const pos = getPosition(e);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            lastX = pos.x;
-            lastY = pos.y;
-        }
-        
-        function startDrawingTouch(e) {
-            e.preventDefault();
-            drawing = true;
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            lastX = touch.clientX - rect.left;
-            lastY = touch.clientY - rect.top;
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-        }
-        
-        function drawTouch(e) {
-            if (!drawing) return;
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            lastX = x;
-            lastY = y;
-        }
-        
-        function stopDrawing() {
-            if (drawing) {
-                drawing = false;
-                ctx.closePath();
-                document.getElementById('firmaInput').value = canvas.toDataURL();
-                // Ocultar mensaje de error si hay firma
-                if (document.getElementById('firmaInput').value) {
-                    document.getElementById('firma_error').style.display = 'none';
-                }
-            }
-        }
-        
-        function clearSignature() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            document.getElementById('firmaInput').value = '';
-        }
-        
-        // Configuración de carga de archivos
-        function setupFileUpload() {
-            const fileUploadArea = document.getElementById('fileUploadArea');
-            const fileInput = document.getElementById('documentos');
-            const fileList = document.getElementById('fileList');
-            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-            
-            fileUploadArea.addEventListener('click', function() {
-                fileInput.click();
-            });
-            
-            fileUploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                fileUploadArea.classList.add('dragover');
-            });
-            
-            fileUploadArea.addEventListener('dragleave', function() {
-                fileUploadArea.classList.remove('dragover');
-            });
-            
-            fileUploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                fileUploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                handleFiles(files);
-            });
-            
-            fileInput.addEventListener('change', function() {
-                handleFiles(this.files);
-            });
-            
-            function handleFiles(files) {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    if (file.type.match('image.*') || file.type === 'application/pdf') {
-                        uploadedFiles.push(file);
-                        
-                        const li = document.createElement('li');
-                        li.className = 'file-item';
-                        li.innerHTML = `
-                            <span>${file.name} (${formatFileSize(file.size)})</span>
-                            <span class="file-remove" data-index="${uploadedFiles.length - 1}">×</span>
-                        `;
-                        fileList.appendChild(li);
-                        
-                        // Si es una imagen, crear una previsualización
-                        if (file.type.match('image.*')) {
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                const imgPreview = document.createElement('img');
-                                imgPreview.src = e.target.result;
-                                imgPreview.className = 'image-preview';
-                                imgPreview.dataset.index = uploadedFiles.length - 1;
-                                imagePreviewContainer.appendChild(imgPreview);
-                                
-                                // Guardar la imagen para el PDF
-                                imagePreviewsForPDF.push({
-                                    index: uploadedFiles.length - 1,
-                                    src: e.target.result,
-                                    name: file.name
-                                });
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    }
-                }
-                
-                // Agregar eventos para eliminar archivos
-                document.querySelectorAll('.file-remove').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const index = parseInt(this.getAttribute('data-index'));
-                        
-                        // Eliminar la previsualización si existe
-                        const preview = document.querySelector(`.image-preview[data-index="${index}"]`);
-                        if (preview) {
-                            preview.remove();
-                            
-                            // Eliminar de las imágenes para PDF
-                            const previewIndex = imagePreviewsForPDF.findIndex(img => img.index === index);
-                            if (previewIndex !== -1) {
-                                imagePreviewsForPDF.splice(previewIndex, 1);
-                            }
-                        }
-                        
-                        // Eliminar el archivo
-                        uploadedFiles.splice(index, 1);
-                        this.parentElement.remove();
-                        
-                        // Actualizar índices
-                        document.querySelectorAll('.file-remove').forEach((btn, idx) => {
-                            btn.setAttribute('data-index', idx);
-                        });
-                        
-                        document.querySelectorAll('.image-preview').forEach((img, idx) => {
-                            img.dataset.index = idx;
-                        });
-                        
-                        // Actualizar índices en imagePreviewsForPDF
-                        imagePreviewsForPDF.forEach((img, idx) => {
-                            img.index = idx;
-                        });
-                    });
-                });
-            }
-            
-            function formatFileSize(bytes) {
-                if (bytes < 1024) return bytes + ' bytes';
-                else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-                else return (bytes / 1048576).toFixed(1) + ' MB';
-            }
-        }
-        
-        // Auto-completar edad a partir de la fecha de nacimiento
-        function setupDateAutoFill() {
-            const fechaNacInput = document.getElementById('titular_fecha_nac');
-            const edadInput = document.getElementById('titular_edad');
-            
-            fechaNacInput.addEventListener('change', function() {
-                if (this.value) {
-                    const birthDate = new Date(this.value);
-                    const today = new Date();
-                    
-                    // Cálculo preciso de la edad
-                    let age = today.getFullYear() - birthDate.getFullYear();
-                    const monthDiff = today.getMonth() - birthDate.getMonth();
-                    
-                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                        age--;
-                    }
-                    
-                    edadInput.value = age;
-                }
-            });
-        }
-        
-        // Validación de campos
-        function validateField(field) {
-            const errorElement = document.getElementById(`${field.id}_error`);
-            if (!errorElement) return true;
-            
-            let isValid = true;
-            
-            if (field.hasAttribute('required') && !field.value.trim()) {
-                errorElement.style.display = 'block';
-                field.classList.add('invalid');
-                isValid = false;
-            } else if (field.type === 'email' && field.value.trim() && !isValidEmail(field.value)) {
-                errorElement.style.display = 'block';
-                field.classList.add('invalid');
-                isValid = false;
-            } else if (field.hasAttribute('pattern') && field.value.trim() && !new RegExp(field.getAttribute('pattern')).test(field.value)) {
-                errorElement.style.display = 'block';
-                field.classList.add('invalid');
-                isValid = false;
-            } else {
-                errorElement.style.display = 'none';
-                field.classList.remove('invalid');
-            }
-            
-            return isValid;
-        }
-        
-        function isValidEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-        
-        function validateSection(sectionNumber) {
-            const section = document.getElementById(`section${sectionNumber}`);
-            const fields = section.querySelectorAll('input[required], textarea[required], select[required]');
-            
-            let isValid = true;
-            
-            fields.forEach(field => {
-                if (!validateField(field)) {
-                    isValid = false;
-                }
-            });
-            
-            // Validación especial para la firma en la sección 5
-            if (sectionNumber === 5) {
-                const firmaInput = document.getElementById('firmaInput');
-                const firmaError = document.getElementById('firma_error');
-                
-                if (!firmaInput.value) {
-                    firmaError.style.display = 'block';
-                    isValid = false;
-                } else {
-                    firmaError.style.display = 'none';
-                }
-            }
-            
-            return isValid;
-        }
-        
-        // Navegación entre secciones con validación
-        function validateAndNext(currentSection) {
-            if (validateSection(currentSection)) {
-                nextSection(currentSection);
-            } else {
-                // Scroll al primer error
-                const firstError = document.querySelector(`#section${currentSection} .validation-error[style="display: block"]`);
-                if (firstError) {
-                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }
-        }
-        
-        function nextSection(currentSection) {
-            document.getElementById(`section${currentSection}`).classList.remove('active');
-            document.getElementById(`section${currentSection + 1}`).classList.add('active');
-            
-            document.querySelector(`.step[data-step="${currentSection}"]`).classList.add('completed');
-            document.querySelector(`.step[data-step="${currentSection + 1}"]`).classList.add('active');
-            
-            updateProgressBar();
-            window.scrollTo(0, 0);
-        }
-        
-        function prevSection(currentSection) {
-            document.getElementById(`section${currentSection}`).classList.remove('active');
-            document.getElementById(`section${currentSection - 1}`).classList.add('active');
-            
-            document.querySelector(`.step[data-step="${currentSection}"]`).classList.remove('active');
-            document.querySelector(`.step[data-step="${currentSection - 1}"]`).classList.add('active');
-            
-            updateProgressBar();
-            window.scrollTo(0, 0);
-        }
-        
-        function updateProgressBar() {
-            const totalSections = 5;
-            const activeSections = document.querySelectorAll('.step.completed, .step.active').length;
-            const progress = (activeSections / totalSections) * 100;
-            document.getElementById('progressBar').style.width = `${progress}%`;
-        }
-        
-        // Generar PDF con imágenes en páginas separadas
-        async function generatePDF() {
-            // Mostrar indicador de carga
-            document.getElementById('loadingIndicator').style.display = 'flex';
-            document.getElementById('loadingText').textContent = 'Generando PDF, por favor espere...';
-            
-            try {
-                // Asegurarse de que el logo esté cargado
-                const logoImg = document.getElementById('logoOspetax');
-                
-                // Esperar a que el logo se cargue completamente
-                if (!logoImg.complete) {
-                    await new Promise(resolve => {
-                        logoImg.onload = resolve;
-                        logoImg.onerror = resolve; // Continuar incluso si hay error
-                    });
-                }
-                
-                // Crear un clon del contenedor para no modificar el original
-                const formContainer = document.getElementById('formContainer');
-                const clone = formContainer.cloneNode(true);
-                
-                // Aplicar estilos para el PDF
-                clone.style.background = 'white';
-                clone.style.padding = '20px';
-                clone.style.maxWidth = '100%';
-                clone.style.position = 'absolute';
-                clone.style.left = '-9999px';
-                clone.style.top = '0';
-                
-                // Asegurarse de que todas las secciones sean visibles en el clon
-                const sections = clone.querySelectorAll('.form-section');
-                sections.forEach(section => {
-                    section.style.display = 'block';
-                    section.classList.add('active');
-                });
-                
-                // Ocultar elementos de navegación y botones en el clon
-                const elementsToHide = clone.querySelectorAll('.form-navigation, .step-indicator, .progress-container, .modal, .file-upload, .file-list, .validation-error');
-                elementsToHide.forEach(el => {
-                    el.style.display = 'none';
-                });
-                
-                // Ocultar el mensaje de éxito en el clon
-                const successMessage = clone.querySelector('.success-message');
-                if (successMessage) {
-                    successMessage.style.display = 'none';
-                }
-                
-                // Añadir título para el PDF
-                const title = document.createElement('h1');
-                title.textContent = 'DECLARACIÓN JURADA DE SALUD - OSPETAX';
-                title.style.textAlign = 'center';
-                title.style.marginBottom = '20px';
-                title.style.color = '#0056b3';
-                
-                // Añadir fecha de generación
-                const dateInfo = document.createElement('p');
-                const today = new Date();
-                dateInfo.textContent = `Documento generado el: ${today.toLocaleDateString('es-AR')}`;
-                dateInfo.style.textAlign = 'right';
-                dateInfo.style.fontSize = '12px';
-                dateInfo.style.marginBottom = '30px';
-                
-                // Insertar título y fecha al principio del clon
-                clone.insertBefore(dateInfo, clone.firstChild);
-                clone.insertBefore(title, clone.firstChild);
-                
-                // Asegurarse de que la firma se muestre en el PDF
-                const originalSignatureCanvas = document.getElementById('signatureCanvas');
-                const signatureDataURL = document.getElementById('firmaInput').value;
-                
-                if (signatureDataURL) {
-                    const signatureSection = clone.querySelector('.signature-container');
-                    const cloneCanvas = signatureSection.querySelector('canvas');
-                    
-                    // Reemplazar el canvas con una imagen de la firma
-                    const signatureImg = document.createElement('img');
-                    signatureImg.src = signatureDataURL;
-                    signatureImg.style.width = '100%';
-                    signatureImg.style.maxWidth = '400px';
-                    signatureImg.style.border = '1px solid #dee2e6';
-                    signatureImg.style.borderRadius = '4px';
-                    
-                    if (cloneCanvas) {
-                        cloneCanvas.replaceWith(signatureImg);
-                    } else {
-                        signatureSection.appendChild(signatureImg);
-                    }
-                }
-                
-                // Añadir el clon al documento para poder capturarlo
-                document.body.appendChild(clone);
-                
-                // Inicializar jsPDF
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                // Dimensiones de página A4
-                const pageWidth = pdf.internal.pageSize.getWidth();
-                const pageHeight = pdf.internal.pageSize.getHeight();
-                
-                // Configurar opciones para html2canvas
-                const options = {
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    logging: false,
-                    scrollY: 0
-                };
-                
-                // Capturar el formulario
-                const canvas = await html2canvas(clone, options);
-                
-                // Eliminar el clon después de capturarlo
-                document.body.removeChild(clone);
-                
-                const imgData = canvas.toDataURL('image/png');
-                
-                // Calcular dimensiones manteniendo la proporción
-                const imgWidth = pageWidth - 20; // Margen de 10mm en cada lado
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                
-                // Añadir la primera página con el formulario
-                pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-                
-                // Añadir páginas adicionales si el formulario es muy largo
-                let heightLeft = imgHeight;
-                let position = 10;
-                
-                while (heightLeft > pageHeight - 20) {
-                    position = position - (pageHeight - 20);
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                    heightLeft -= (pageHeight - 20);
-                }
-                
-                // Añadir imágenes adjuntas en páginas separadas
-                if (imagePreviewsForPDF.length > 0) {
-                    for (let i = 0; i < imagePreviewsForPDF.length; i++) {
-                        const imgData = imagePreviewsForPDF[i];
-                        
-                        // Crear una imagen para obtener dimensiones
-                        const img = new Image();
-                        img.src = imgData.src;
-                        
-                        // Esperar a que la imagen se cargue
-                        await new Promise(resolve => {
-                            img.onload = resolve;
-                            img.onerror = resolve;
-                        });
-                        
-                        // Añadir una nueva página para cada imagen
-                        pdf.addPage();
-                        
-                        // Añadir título de la imagen
-                        pdf.setFontSize(14);
-                        pdf.setTextColor(0, 86, 179);
-                        pdf.text(`Documento adjunto: ${imgData.name}`, 10, 20);
-                        
-                        // Calcular dimensiones para la imagen
-                        const imgWidth = pageWidth - 20;
-                        const imgHeight = (img.height * imgWidth) / img.width;
-                        
-                        // Asegurarse de que la imagen no sea más alta que la página
-                        let finalImgHeight = imgHeight;
-                        let finalImgWidth = imgWidth;
-                        
-                        if (imgHeight > pageHeight - 40) {
-                            finalImgHeight = pageHeight - 40;
-                            finalImgWidth = (img.width * finalImgHeight) / img.height;
-                        }
-                        
-                        // Centrar la imagen horizontalmente
-                        const xOffset = (pageWidth - finalImgWidth) / 2;
-                        
-                        // Añadir la imagen
-                        pdf.addImage(imgData.src, 'PNG', xOffset, 30, finalImgWidth, finalImgHeight);
-                    }
-                }
-                
-                // Obtener el CUIT para el nombre del archivo
-                const cuit = document.getElementById('titular_cuit').value || 'formulario';
-                
-                return {
-                    pdf: pdf,
-                    fileName: `Declaracion_Jurada_OSPETAX_${cuit}.pdf`
-                };
-                
-            } catch (error) {
-                console.error('Error al generar el PDF:', error);
-                throw error;
-            } finally {
-                // Ocultar indicador de carga
-                document.getElementById('loadingIndicator').style.display = 'none';
-            }
-        }
-        
-        // Guardar datos en Google Sheets
-        async function saveToGoogleSheets(formData) {
-            try {
-                // Verificar si el usuario está autenticado
-                if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                    await gapi.auth2.getAuthInstance().signIn();
-                }
-                
-                // Preparar los datos para Google Sheets
-                const values = [
-                    [
-                        formData.get('titular_nombre'),
-                        formData.get('titular_cuit'),
-                        formData.get('titular_fecha_nac'),
-                        formData.get('titular_edad'),
-                        formData.get('titular_email'),
-                        formData.get('domicilio'),
-                        formData.get('provincia'),
-                        formData.get('celular'),
-                        new Date().toISOString() // Fecha de envío
-                    ]
-                ];
-                
-                // Enviar datos a Google Sheets
-                const response = await gapi.client.sheets.spreadsheets.values.append({
-                    spreadsheetId: SPREADSHEET_ID,
-                    range: 'Formularios!A2:I', // Ajustar según la estructura de tu hoja
-                    valueInputOption: 'USER_ENTERED',
-                    resource: {
-                        values: values
-                    }
-                });
-                
-                console.log('Datos guardados en Google Sheets:', response);
-                return response;
-                
-            } catch (error) {
-                console.error('Error al guardar en Google Sheets:', error);
-                throw error;
-            }
-        }
-        
-        // Guardar PDF en Google Drive
-        async function savePDFToDrive(pdfData) {
-            try {
-                // Verificar si el usuario está autenticado
-                if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-                    await gapi.auth2.getAuthInstance().signIn();
-                }
-                
-                // Convertir el PDF a Blob
-                const pdfBlob = pdfData.pdf.output('blob');
-                
-                // Crear un objeto File a partir del Blob
-                const file = new File([pdfBlob], pdfData.fileName, { type: 'application/pdf' });
-                
-                // Crear un objeto FormData para la carga
-                const metadata = {
-                    name: pdfData.fileName,
-                    mimeType: 'application/pdf',
-                    parents: [DRIVE_FOLDER_ID] // ID de la carpeta en Google Drive
-                };
-                
-                const form = new FormData();
-                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                form.append('file', file);
-                
-                // Obtener el token de acceso
-                const accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
-                
-                // Subir el archivo a Google Drive
-                const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                    body: form
-                });
-                
-                const result = await response.json();
-                console.log('PDF guardado en Google Drive:', result);
-                
-                return result;
-                
-            } catch (error) {
-                console.error('Error al guardar PDF en Google Drive:', error);
-                throw error;
-            }
-        }
-        
-        // Función para enviar el formulario
-        async function submitForm(event) {
-            event.preventDefault();
-            
-            // Validar todos los campos
-            let isValid = true;
-            for (let i = 1; i <= 5; i++) {
-                if (!validateSection(i)) {
-                    isValid = false;
-                    // Mostrar la sección con errores
-                    document.querySelectorAll('.form-section').forEach(section => {
-                        section.classList.remove('active');
-                    });
-                    document.getElementById(`section${i}`).classList.add('active');
-                    
-                    // Actualizar los indicadores de paso
-                    document.querySelectorAll('.step').forEach(step => {
-                        step.classList.remove('active');
-                    });
-                    document.querySelector(`.step[data-step="${i}"]`).classList.add('active');
-                    
-                    // Scroll al primer error
-                    const firstError = document.querySelector(`#section${i} .validation-error[style="display: block"]`);
-                    if (firstError) {
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    
-                    break;
-                }
-            }
-            
-            if (!isValid) {
-                return;
-            }
-            
-            // Mostrar indicador de carga
-            document.getElementById('loadingIndicator').style.display = 'flex';
-            document.getElementById('loadingText').textContent = 'Procesando formulario, por favor espere...';
-            
-            try {
-                // Obtener los datos del formulario
-                const formData = new FormData(document.getElementById('healthForm'));
-                
-                // Generar el PDF
-                const pdfData = await generatePDF();
-                
-                // Guardar datos en Google Sheets
-                await saveToGoogleSheets(formData);
-                
-                // Guardar PDF en Google Drive
-                await savePDFToDrive(pdfData);
-                
-                // Mostrar mensaje de éxito
-                document.getElementById('healthForm').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-                
-                // Scroll al mensaje
-                window.scrollTo(0, 0);
-                
-            } catch (error) {
-                console.error('Error al procesar el formulario:', error);
-                document.getElementById('errorMessage').style.display = 'block';
-                document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth' });
-            } finally {
-                // Ocultar indicador de carga
-                document.getElementById('loadingIndicator').style.display = 'none';
-            }
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    
-    <script>
-      async function submitForm(event) {
-        event.preventDefault();
-    
-        const cuit = document.getElementById('titular_cuit').value || "no-cuit";
-        const formElement = document.getElementById('formulario');
-        const canvas = await html2canvas(formElement, { scale: 2 });
-    
-        const pdf = new jspdf.jsPDF();
-        const imgData = canvas.toDataURL('image/png');
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        const pdfBase64 = pdf.output('datauristring');
-    
-        const inputs = document.querySelectorAll('input, select, textarea');
-        const formData = {};
-        inputs.forEach(input => {
-          const name = input.name || input.id;
-          if (name) formData[name] = input.value;
-        });
-    
-        const payload = {
-          cuit: cuit,
-          pdfBase64: pdfBase64,
-          formData: formData
-        };
-    
-        const webhookUrl = 'https://script.google.com/macros/s/AKfycbw6awEgSv8XTTJhTK9JNQsBM-CZ0AMaoj4TdvYfTiSZLW_tNB1u_fcIG8wy3W_mbctYmA/exec'; // reemplazalo por tu URL de Apps Script
-    
-        const response = await fetch(webhookUrl, {
-          method: 'POST',
-          body: JSON.stringify(payload),
-          headers: { 'Content-Type': 'application/json' }
-        });
-    
-        const result = await response.json();
-        if (result.status === 'success') {
-          alert('Formulario enviado correctamente');
-        } else {
-          alert('Error: ' + result.message);
-        }
-      }
-    
-      document.getElementById('formulario').addEventListener('submit', submitForm);
-    </script>
-    
+    <script src="./main.js"></script>
 </body>
 </html>
