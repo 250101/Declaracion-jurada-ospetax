@@ -1,6 +1,6 @@
 // Google API constants
-const API_KEY = "AIzaSyAi9C-1OcqGWlAOQVRLWvUrUcdoL-AHZS0";
-const CLIENT_ID = "108652054327996794294";
+const API_KEY = "AIzaSyDuwHvuFEh3hihBs1lJoy2lcPENPV_Ueso";
+const CLIENT_ID = "1019267372633-eae1g3s7kkfmssofl5lc1c0pjnkp6kj2.apps.googleusercontent.com";
 const SPREADSHEET_ID = "1gwK6-S-Ms5rgOJmUOP8NnWEGiJrCzdk2IZ1iZtkSubI";
 const DRIVE_FOLDER_ID = "1gcxJbbsiUmQOLbX05xeKH98BTjl_OsKg";
 const SCOPES = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";

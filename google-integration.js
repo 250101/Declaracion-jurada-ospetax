@@ -4,8 +4,8 @@
  */
 
 // Configuration variables
-let API_KEY = "AIzaSyAi9C-1OcqGWlAOQVRLWvUrUcdoL-AHZS0"
-let CLIENT_ID = "759101310647-1g2h8gef8d75efnrer26h7f7cc5gdk3n.apps.googleusercontent.com"
+let API_KEY = "AIzaSyDuwHvuFEh3hihBs1lJoy2lcPENPV_Ueso"
+let CLIENT_ID = "1019267372633-eae1g3s7kkfmssofl5lc1c0pjnkp6kj2.apps.googleusercontent.com"
 let SPREADSHEET_ID = "1gwK6-S-Ms5rgOJmUOP8NnWEGiJrCzdk2IZ1iZtkSubI"
 let DRIVE_FOLDER_ID = "1gcxJbbsiUmQOLbX05xeKH98BTjl_OsKg"
 
